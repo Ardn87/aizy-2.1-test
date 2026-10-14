@@ -1,0 +1,18 @@
+[
+  {
+    "id": "M001",
+    "invoice_id": 82,
+    "claim_id": 9,
+    "supplier_id": 33,
+    "attendu": "Écart prix réclamé et conservé dans le brouillon mixte.",
+    "impact": "20.00"
+  },
+  {
+    "id": "M002",
+    "invoice_id": 83,
+    "claim_id": 9,
+    "supplier_id": 33,
+    "attendu": "Écart prix réclamé et conservé dans le brouillon mixte.",
+    "impact": "5.00"
+  }
+]

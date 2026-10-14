@@ -1,0 +1,79 @@
+﻿code,cas,attendu,facture_id,facture,fournisseur,restaurant,controle_prix_observe,rapprochement_observe,proposition_complete
+C001,Prix identique,"Conforme, absent de la revue",1,FICTIF-F-C001,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C002,Prix supérieur,"Écart +2 CHF/kg, impact +20 CHF",2,FICTIF-F-C002,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C003,Prix inférieur,"Écart -2 CHF/kg, pas de réclamation",3,FICTIF-F-C003,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C004,Tolérance arrondi,"Conforme dans la tolérance de 0,02",4,FICTIF-F-C004,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C005,Limite exacte tolérance,"Conforme au seuil de 0,02",5,FICTIF-F-C005,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C006,Dépassement tolérance,"Écart détecté au-delà de 0,02",6,FICTIF-F-C006,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C007,Prix catalogue absent,Renseigner un prix catalogue,7,FICTIF-F-C007,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,prix_manquant,waiting,False
+C008,Produit absent,Créer ou associer le produit,8,FICTIF-F-C008,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,produit_non_trouve,waiting,False
+C009,Prix document absent,"Données à vérifier, pas de prix inventé",9,FICTIF-F-C009,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,prix_manquant,waiting,False
+C010,Prix zéro offert,Prix zéro conservé,10,FICTIF-F-C010,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C011,Prix document négatif,"Données à vérifier, hors revue de prix",11,FICTIF-F-C011,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C012,Quantité absente,"Écart visible, montant réclamation indisponible",12,FICTIF-F-C012,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,review,False
+C013,Quantité nulle,Écart visible sans surcoût positif,13,FICTIF-F-C013,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,review,False
+C014,Quantité fractionnaire,"Écart calculé sur 2,750 kg",14,FICTIF-F-C014,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C015,Unité absente,Unité à vérifier,15,FICTIF-F-C015,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,unite_a_verifier,review,False
+C016,Unité différente sans règle,"Unité à vérifier, pas de comparaison brute",16,FICTIF-F-C016,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,unite_a_verifier,waiting,False
+C017,Conversion unité confirmée,6 kg par carton : prix conforme,17,FICTIF-F-C017,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C018,Devise différente,"Comparaison bloquée, aucun taux inventé",18,FICTIF-F-C018,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,devise_differente,waiting,False
+C019,Devise inconnue,"À confirmer, aucune devise déduite",19,FICTIF-F-C019,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,devise_differente,waiting,False
+C020,Date absente,Contrôle prix impossible,20,FICTIF-F-C020,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,date_absente,waiting,False
+C021,Numéro facture absent,"Écart visible, réclamation bloquée",21,,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C022,Catalogue absent,Catalogue à créer,22,FICTIF-F-C022,FICTIF · Sans catalogue,FICTIF · Le Belvédère,catalogue_absent,waiting,False
+C023,Catalogue expiré,Aucun tarif applicable,23,FICTIF-F-C023,FICTIF · Tarif expiré,FICTIF · Le Belvédère,catalogue_absent,waiting,False
+C024,Catalogues en conflit,Chevauchement à résoudre,24,FICTIF-F-C024,FICTIF · Périodes en conflit,FICTIF · Le Belvédère,catalogues_multiples,waiting,False
+C025,Catalogue non validé,Tarif non applicable,25,FICTIF-F-C025,FICTIF · Catalogue non validé,FICTIF · Le Belvédère,catalogue_absent,waiting,False
+C026,Référence initiale issue des documents,Prix indicatif et provenance explicites,26,FICTIF-F-C026,FICTIF · Références initiales,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C027,Référence ambiguë,Plusieurs lignes catalogue : ne pas choisir arbitrairement,27,FICTIF-F-C027,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,produit_ambigu,waiting,False
+C028,EAN seul,Correspondance par EAN,28,FICTIF-F-C028,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C029,Alias produit confirmé,Correspondance par alias fournisseur,29,FICTIF-F-C029,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C030,Nom produit long,"Mise en page mobile, accents et caractères spéciaux",30,FICTIF-F-C030,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C031,Devise EUR autre restaurant,"Même nom fournisseur, établissement et devise distincts",31,FICTIF-F-C031,FICTIF · Marché des Cimes,FICTIF · La Terrasse,ecart_prix,waiting,False
+C032,Frais livraison et remise,Lignes hors produits exclues du contrôle prix,32,FICTIF-F-C032,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,waiting,False
+C033,BL unique proposé,Proposition automatique à valider,33,FICTIF-F-C033,FICTIF · Test BL unique proposé,FICTIF · Le Belvédère,conforme,pending,True
+C034,Deux BL pour une facture,Proposition cumulant 4 + 6 kg,34,FICTIF-F-C034,FICTIF · Test Deux BL pour une facture,FICTIF · Le Belvédère,conforme,pending,True
+C035,BL déjà rapproché,"Quantités conformes, rapprochement validé",35,FICTIF-F-C035,FICTIF · Test BL déjà rapproché,FICTIF · Le Belvédère,conforme,matched,False
+C036,Facturation supérieure au livré,"2 kg manquants, litige quantité uniquement",36,FICTIF-F-C036,FICTIF · Test Facturation supérieure au livré,FICTIF · Le Belvédère,conforme,difference,False
+C037,Livraison supérieure au facturé,Solde de 2 kg disponible sur BL,37,FICTIF-F-C037,FICTIF · Test Livraison supérieure au facturé,FICTIF · Le Belvédère,conforme,matched,False
+C038,BL absent délai non expiré,"Attente de BL, reçu inconnu",38,FICTIF-F-C038,FICTIF · Test BL absent délai non expiré,FICTIF · Le Belvédère,conforme,waiting,False
+C039,BL absent délai dépassé,"BL manquant, aucune quantité livrée inventée",39,FICTIF-F-C039,FICTIF · Test BL absent délai dépassé,FICTIF · Le Belvédère,conforme,difference,False
+C040,BL sans prix,Rapprochement des quantités possible,40,FICTIF-F-C040,FICTIF · Test BL sans prix,FICTIF · Le Belvédère,conforme,pending,True
+C041,BL quantité absente,Données du BL à vérifier,41,FICTIF-F-C041,FICTIF · Test BL quantité absente,FICTIF · Le Belvédère,conforme,pending,False
+C042,Deux BL identiques candidats,"Ambiguïté, aucune association arbitraire",42,FICTIF-F-C042,FICTIF · Test Deux BL identiques candidats,FICTIF · Le Belvédère,conforme,pending,False
+C043,BL date éloignée,Pas de lien automatique fiable,43,FICTIF-F-C043,FICTIF · Test BL date éloignée,FICTIF · Le Belvédère,conforme,pending,False
+C044,BL unité incompatible,Conversion à vérifier,44,FICTIF-F-C044,FICTIF · Test BL unité incompatible,FICTIF · Le Belvédère,conforme,pending,False
+C045,Réception partielle et retour,"10 annoncés, 9 reçus, 1 retourné = 8 nets",45,FICTIF-F-C045,FICTIF · Test Réception partielle et retour,FICTIF · Le Belvédère,conforme,difference,False
+C046,BL modifié après validation,Association obsolète à revoir,46,FICTIF-F-C046,FICTIF · Test BL modifié après validation,FICTIF · Le Belvédère,conforme,review,False
+C047,Facture sans BL fournisseur déclaré,"Livraison non vérifiée, pas échec automatique",47,FICTIF-F-C047,FICTIF · Sans BL,FICTIF · Le Belvédère,conforme,unverified,False
+C048,Facture seule réception confirmée,Quantité constatée sans BL,48,FICTIF-F-C048,FICTIF · Sans BL,FICTIF · Le Belvédère,conforme,matched,False
+C049,Document BL servant de facture,"Document combiné, pas double facturation",49,FICTIF-F-C049,FICTIF · BL facture,FICTIF · Le Belvédère,conforme,unverified,False
+C050,Mode fournisseur indéterminé,Fonctionnement à confirmer,50,FICTIF-F-C050,FICTIF · Mode variable,FICTIF · Le Belvédère,conforme,setup,False
+C051,Doublon de facture suspect,Même fournisseur et numéro : vérification obligatoire,51,FICTIF-F-C051,FICTIF · Test Doublon de facture suspect,FICTIF · Le Belvédère,conforme,waiting,False
+C052,Duplicata déjà exclu,Hors revue et rapprochement,53,FICTIF-F-C052,FICTIF · Test Duplicata déjà exclu,FICTIF · Le Belvédère,document_exclu,excluded,False
+C053,Relevé récapitulatif,Hors revue et rapprochement,54,FICTIF-F-C053,FICTIF · Test Relevé récapitulatif,FICTIF · Le Belvédère,document_exclu,excluded,False
+C054,Facture remplacée,Version remplacée exclue,55,FICTIF-F-C054,FICTIF · Test Facture remplacée,FICTIF · Le Belvédère,document_exclu,excluded,False
+C055,Avoir partiel lié à quantité,8 kg livrés + avoir 2 kg = 10 rapprochés,57,FICTIF-F-C055,FICTIF · Test Avoir partiel lié à quantité,FICTIF · Le Belvédère,conforme,matched,False
+C056,Analyse échouée,Fichier conservé et relance possible,59,FICTIF-F-C056,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,produit_non_trouve,review,False
+C057,Document importé non analysé,"Fichier présent, extraction non disponible",60,FICTIF-F-C057,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,produit_non_trouve,review,False
+C058,Analyse en cours simulée,"Statut de démonstration, aucun job IA lancé",61,FICTIF-F-C058,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,produit_non_trouve,review,False
+C059,OCR incertain,Données brutes et faible confiance conservées,62,FICTIF-F-C059,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C060,Total document incohérent,"Contrôle qualité, pas comparaison de quantités dans la revue",63,FICTIF-F-C060,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C061,Document archivé,"Invisible des listes actives, restaurable",64,FICTIF-F-C061,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,controle_effectue,review,False
+C062,Réclamation Brouillon,Suivi Brouillon avec montant et document source,65,FICTIF-F-C062,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C063,Réclamation regroupée seconde facture,"Même brouillon fournisseur, deuxième numéro de facture",66,FICTIF-F-C063,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C064,Réclamation Préparée,Suivi Préparée avec montant et document source,67,FICTIF-F-C064,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C065,Réclamation Envoi confirmé,Suivi Envoi confirmé avec montant et document source,68,FICTIF-F-C065,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C066,Réclamation Réponse reçue,Suivi Réponse reçue avec montant et document source,69,FICTIF-F-C066,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C067,Réclamation Avoir attendu,Suivi Avoir attendu avec montant et document source,70,FICTIF-F-C067,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C068,Réclamation Avoir reçu,Suivi Avoir reçu avec montant et document source,71,FICTIF-F-C068,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C069,Réclamation Clôturée,Suivi Clôturée avec montant et document source,72,FICTIF-F-C069,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C070,Réclamation Annulée,Suivi Annulée avec montant et document source,73,FICTIF-F-C070,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C071,Écart mis en attente,Visible dans En attente,74,FICTIF-F-C071,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C072,Décision ancienne devenue obsolète,Écart revenu en revue après changement du prix,75,FICTIF-F-C072,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False
+C073,Proposition rapprochement refusée,Proposition marquée refusée,76,FICTIF-F-C073,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,conforme,pending,True
+C074,Un BL réparti sur deux factures,"4 kg + 6 kg facturés, pas de double consommation",77,FICTIF-F-C074,FICTIF · Test Un BL réparti sur deux factures,FICTIF · Le Belvédère,conforme,matched,False
+C075,Seconde facture du BL partagé,Solde 6 kg rapproché sur le même BL,78,FICTIF-F-C075,FICTIF · Test Un BL réparti sur deux factures,FICTIF · Le Belvédère,conforme,matched,False
+C076,Conversion BL confirmée,"1 carton = 10 kg, correspondance mémorisée",79,FICTIF-F-C076,FICTIF · Test Conversion BL confirmée,FICTIF · Le Belvédère,conforme,pending,True
+C077,Même fichier BL et facture,Ne pas proposer de rapprochement de deux copies du même fichier,80,FICTIF-F-C077,FICTIF · Test Même fichier BL et facture,FICTIF · Le Belvédère,conforme,pending,False
+C078,Volume : facture de 40 articles,Défilement et navigation avec beaucoup de fiches,81,FICTIF-F-C078,FICTIF · Marché des Cimes,FICTIF · Le Belvédère,ecart_prix,waiting,False

@@ -1,0 +1,1420 @@
+[
+  {
+    "id": "L001",
+    "titre": "BL sans commentaires",
+    "supplier": "Bianchi",
+    "mode": "no_feedback",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Aucun écran de commentaires ; aucun problème créé.",
+    "rows": [
+      {
+        "reference": "L001-P01",
+        "designation": "Produit FICTIF L001 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L001-P02",
+        "designation": "Produit FICTIF L001 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L001-P03",
+        "designation": "Produit FICTIF L001 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L001.pdf",
+    "number": "FICTIF-BL-L001",
+    "date": "2026-10-13",
+    "bl_id": 21,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      21,
+      22,
+      23
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L002",
+    "titre": "Commentaires à saisir · un produit",
+    "supplier": "Bianchi",
+    "mode": "ready",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Liste de trois produits ; sélectionner un produit et commenter après OCR.",
+    "rows": [
+      {
+        "reference": "L002-P01",
+        "designation": "Produit FICTIF L002 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L002-P02",
+        "designation": "Produit FICTIF L002 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L002-P03",
+        "designation": "Produit FICTIF L002 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L002.pdf",
+    "number": "FICTIF-BL-L002",
+    "date": "2026-10-13",
+    "bl_id": 22,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      24,
+      25,
+      26
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L003",
+    "titre": "Commentaires à saisir · plusieurs produits",
+    "supplier": "Bianchi",
+    "mode": "ready",
+    "format": "jpg",
+    "products": 3,
+    "attendu": "Image lisible ; sélectionner deux produits et saisir un commentaire par produit.",
+    "rows": [
+      {
+        "reference": "L003-P01",
+        "designation": "Produit FICTIF L003 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L003-P02",
+        "designation": "Produit FICTIF L003 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L003-P03",
+        "designation": "Produit FICTIF L003 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L003.jpg",
+    "number": "FICTIF-BL-L003",
+    "date": "2026-10-13",
+    "bl_id": 23,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      27,
+      28,
+      29
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L004",
+    "titre": "Extraction incertaine · quantité absente",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "uncertain",
+    "format": "png",
+    "products": 3,
+    "attendu": "Conserver la quantité inconnue ; le défaut n’est pas valorisé arbitrairement.",
+    "rows": [
+      {
+        "reference": "L004-P01",
+        "designation": "Produit FICTIF L004 · 1",
+        "quantity": null,
+        "unit": "kg"
+      },
+      {
+        "reference": "L004-P02",
+        "designation": "Produit FICTIF L004 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L004-P03",
+        "designation": "Produit FICTIF L004 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L004.png",
+    "number": "FICTIF-BL-L004",
+    "date": "2026-10-13",
+    "bl_id": 24,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      30,
+      31,
+      32
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L005",
+    "titre": "OCR terminé sans aucun produit",
+    "supplier": "Bianchi",
+    "mode": "empty",
+    "format": "pdf",
+    "products": 0,
+    "attendu": "Message aucun produit reconnu ; document conservé ; aucune validation de commentaire possible.",
+    "rows": [],
+    "file": "fictif-aizy/v21/L005.pdf",
+    "number": "FICTIF-BL-L005",
+    "date": "2026-10-13",
+    "bl_id": 25,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [],
+    "issue_ids": []
+  },
+  {
+    "id": "L006",
+    "titre": "Analyse en cours simulée",
+    "supplier": "Bianchi",
+    "mode": "processing",
+    "format": "pdf",
+    "products": 0,
+    "attendu": "État de traitement visible ; aucune liste fictivement reconnue. Simulation sans job actif.",
+    "rows": [],
+    "file": "fictif-aizy/v21/L006.pdf",
+    "number": "FICTIF-BL-L006",
+    "date": "2026-10-13",
+    "bl_id": 26,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [],
+    "issue_ids": []
+  },
+  {
+    "id": "L007",
+    "titre": "Analyse échouée simulée",
+    "supplier": "Bianchi",
+    "mode": "failed",
+    "format": "pdf",
+    "products": 0,
+    "attendu": "Échec explicite ; original conservé ; relance disponible après configuration IA.",
+    "rows": [],
+    "file": "fictif-aizy/v21/L007.pdf",
+    "number": "FICTIF-BL-L007",
+    "date": "2026-10-13",
+    "bl_id": 27,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [],
+    "issue_ids": []
+  },
+  {
+    "id": "L008",
+    "titre": "Commentaires terminés · aucun défaut",
+    "supplier": "Bianchi",
+    "mode": "none",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Formulaire clos ; aucun signalement ; répétition sans doublon.",
+    "rows": [
+      {
+        "reference": "L008-P01",
+        "designation": "Produit FICTIF L008 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L008-P02",
+        "designation": "Produit FICTIF L008 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L008-P03",
+        "designation": "Produit FICTIF L008 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L008.pdf",
+    "number": "FICTIF-BL-L008",
+    "date": "2026-10-13",
+    "bl_id": 28,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      33,
+      34,
+      35
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L009",
+    "titre": "Produit abîmé · à vérifier",
+    "supplier": "Bianchi",
+    "mode": "pending",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Une carte ; confirmer ajoute au brouillon fournisseur ; écarter n’ajoute rien.",
+    "rows": [
+      {
+        "reference": "L009-P01",
+        "designation": "Produit FICTIF L009 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L009-P02",
+        "designation": "Produit FICTIF L009 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L009-P03",
+        "designation": "Produit FICTIF L009 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L009.pdf",
+    "number": "FICTIF-BL-L009",
+    "date": "2026-10-13",
+    "bl_id": 29,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      36,
+      37,
+      38
+    ],
+    "issue_ids": [
+      1
+    ]
+  },
+  {
+    "id": "L010",
+    "titre": "Trois défauts sur un même BL",
+    "supplier": "Bianchi",
+    "mode": "multi_pending",
+    "format": "jpg",
+    "products": 3,
+    "attendu": "Trois fiches distinctes : abîmé, produit manquant et produit erroné ; un seul BL cité.",
+    "rows": [
+      {
+        "reference": "L010-P01",
+        "designation": "Produit FICTIF L010 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L010-P02",
+        "designation": "Produit FICTIF L010 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L010-P03",
+        "designation": "Produit FICTIF L010 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L010.jpg",
+    "number": "FICTIF-BL-L010",
+    "date": "2026-10-13",
+    "bl_id": 30,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      39,
+      40,
+      41
+    ],
+    "issue_ids": [
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "L011",
+    "titre": "Défaut · quantité non reconnue",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "pending_unknown",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Quantité non renseignée et montant à déterminer ; commentaire conservé.",
+    "rows": [
+      {
+        "reference": "L011-P01",
+        "designation": "Produit FICTIF L011 · 1",
+        "quantity": null,
+        "unit": "kg"
+      },
+      {
+        "reference": "L011-P02",
+        "designation": "Produit FICTIF L011 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L011-P03",
+        "designation": "Produit FICTIF L011 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L011.pdf",
+    "number": "FICTIF-BL-L011",
+    "date": "2026-10-13",
+    "bl_id": 31,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      42,
+      43,
+      44
+    ],
+    "issue_ids": [
+      5
+    ]
+  },
+  {
+    "id": "L012",
+    "titre": "Défaut · quantité zéro",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "pending_zero",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Zéro reste zéro ; aucun montant de perte inventé.",
+    "rows": [
+      {
+        "reference": "L012-P01",
+        "designation": "Produit FICTIF L012 · 1",
+        "quantity": "0",
+        "unit": "kg"
+      },
+      {
+        "reference": "L012-P02",
+        "designation": "Produit FICTIF L012 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L012-P03",
+        "designation": "Produit FICTIF L012 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L012.pdf",
+    "number": "FICTIF-BL-L012",
+    "date": "2026-10-13",
+    "bl_id": 32,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      45,
+      46,
+      47
+    ],
+    "issue_ids": [
+      6
+    ]
+  },
+  {
+    "id": "L013",
+    "titre": "Données source modifiées après signalement",
+    "supplier": "Bianchi",
+    "mode": "stale",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Avertissement source modifiée ; vérifier le BL actuel avant décision ; commentaire initial conservé.",
+    "rows": [
+      {
+        "reference": "L013-P01",
+        "designation": "Produit FICTIF L013 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L013-P02",
+        "designation": "Produit FICTIF L013 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L013-P03",
+        "designation": "Produit FICTIF L013 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L013.pdf",
+    "number": "FICTIF-BL-L013",
+    "date": "2026-10-13",
+    "bl_id": 33,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      48,
+      49,
+      50
+    ],
+    "issue_ids": [
+      7
+    ]
+  },
+  {
+    "id": "L014",
+    "titre": "Signalement classé sans suite",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "dismissed",
+    "format": "png",
+    "products": 3,
+    "attendu": "Dans historique uniquement ; aucune ligne de réclamation.",
+    "rows": [
+      {
+        "reference": "L014-P01",
+        "designation": "Produit FICTIF L014 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L014-P02",
+        "designation": "Produit FICTIF L014 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L014-P03",
+        "designation": "Produit FICTIF L014 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L014.png",
+    "number": "FICTIF-BL-L014",
+    "date": "2026-10-13",
+    "bl_id": 34,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      51,
+      52,
+      53
+    ],
+    "issue_ids": [
+      8
+    ]
+  },
+  {
+    "id": "L015",
+    "titre": "Défaut confirmé dans un brouillon mixte",
+    "supplier": "Bianchi",
+    "mode": "confirmed",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Brouillon fournisseur avec prix et livraison ; montant connu séparé des défauts non chiffrés.",
+    "rows": [
+      {
+        "reference": "L015-P01",
+        "designation": "Produit FICTIF L015 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L015-P02",
+        "designation": "Produit FICTIF L015 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L015-P03",
+        "designation": "Produit FICTIF L015 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L015.pdf",
+    "number": "FICTIF-BL-L015",
+    "date": "2026-10-13",
+    "claim_id": 9,
+    "bl_id": 35,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      54,
+      55,
+      56
+    ],
+    "issue_ids": [
+      9
+    ]
+  },
+  {
+    "id": "L016",
+    "titre": "Deuxième BL du même fournisseur confirmé",
+    "supplier": "Bianchi",
+    "mode": "confirmed",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Même brouillon que L015 ; chaque BL et chaque facture référencés.",
+    "rows": [
+      {
+        "reference": "L016-P01",
+        "designation": "Produit FICTIF L016 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L016-P02",
+        "designation": "Produit FICTIF L016 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L016-P03",
+        "designation": "Produit FICTIF L016 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L016.pdf",
+    "number": "FICTIF-BL-L016",
+    "date": "2026-10-13",
+    "claim_id": 9,
+    "bl_id": 36,
+    "supplier_id": 33,
+    "restaurant_id": 1,
+    "line_ids": [
+      57,
+      58,
+      59
+    ],
+    "issue_ids": [
+      10
+    ]
+  },
+  {
+    "id": "L017",
+    "titre": "Réclamation livraison seule préparée",
+    "supplier": "Culturefood",
+    "mode": "prepared",
+    "format": "jpg",
+    "products": 3,
+    "attendu": "Aperçu intégré ; montant à déterminer ; mail contient BL et commentaires sans pièce jointe.",
+    "rows": [
+      {
+        "reference": "L017-P01",
+        "designation": "Produit FICTIF L017 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L017-P02",
+        "designation": "Produit FICTIF L017 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L017-P03",
+        "designation": "Produit FICTIF L017 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L017.jpg",
+    "number": "FICTIF-BL-L017",
+    "date": "2026-10-13",
+    "claim_id": 10,
+    "bl_id": 37,
+    "supplier_id": 35,
+    "restaurant_id": 1,
+    "line_ids": [
+      60,
+      61,
+      62
+    ],
+    "issue_ids": [
+      11
+    ]
+  },
+  {
+    "id": "L018",
+    "titre": "Réclamation annulée · signalement rouvert",
+    "supplier": "FICTIF · Contact manquant",
+    "mode": "cancelled",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Annulation conservée ; défaut revient à revoir ; nouvelle confirmation possible.",
+    "rows": [
+      {
+        "reference": "L018-P01",
+        "designation": "Produit FICTIF L018 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L018-P02",
+        "designation": "Produit FICTIF L018 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L018-P03",
+        "designation": "Produit FICTIF L018 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L018.pdf",
+    "number": "FICTIF-BL-L018",
+    "date": "2026-10-13",
+    "claim_id": 11,
+    "bl_id": 38,
+    "supplier_id": 36,
+    "restaurant_id": 1,
+    "line_ids": [
+      63,
+      64,
+      65
+    ],
+    "issue_ids": [
+      12
+    ]
+  },
+  {
+    "id": "L019",
+    "titre": "BL archivé · signalement non traité",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "archived_pending",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Absent de la revue active ; document présent dans Archives et restaurable.",
+    "rows": [
+      {
+        "reference": "L019-P01",
+        "designation": "Produit FICTIF L019 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L019-P02",
+        "designation": "Produit FICTIF L019 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L019-P03",
+        "designation": "Produit FICTIF L019 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L019.pdf",
+    "number": "FICTIF-BL-L019",
+    "date": "2026-10-13",
+    "bl_id": 39,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      66,
+      67,
+      68
+    ],
+    "issue_ids": [
+      13
+    ]
+  },
+  {
+    "id": "L020",
+    "titre": "BL archivé · réclamation conservée",
+    "supplier": "Culturefood",
+    "mode": "archived_confirmed",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Historique et texte de réclamation conservés ; aucun lien actif vers un BL archivé.",
+    "rows": [
+      {
+        "reference": "L020-P01",
+        "designation": "Produit FICTIF L020 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L020-P02",
+        "designation": "Produit FICTIF L020 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L020-P03",
+        "designation": "Produit FICTIF L020 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L020.pdf",
+    "number": "FICTIF-BL-L020",
+    "date": "2026-10-13",
+    "claim_id": 12,
+    "bl_id": 40,
+    "supplier_id": 35,
+    "restaurant_id": 1,
+    "line_ids": [
+      69,
+      70,
+      71
+    ],
+    "issue_ids": [
+      14
+    ]
+  },
+  {
+    "id": "L021",
+    "titre": "Volume · 45 signalements sur un BL",
+    "supplier": "FICTIF · Cartons de démonstration",
+    "mode": "volume",
+    "format": "pdf",
+    "products": 45,
+    "attendu": "Progression avec ellipses ; franchir 40/41 puis 45 ; aucune perte de fiche.",
+    "rows": [
+      {
+        "reference": "L021-P01",
+        "designation": "Produit FICTIF L021 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P02",
+        "designation": "Produit FICTIF L021 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P03",
+        "designation": "Produit FICTIF L021 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P04",
+        "designation": "Produit FICTIF L021 · 4",
+        "quantity": "5",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P05",
+        "designation": "Produit FICTIF L021 · 5",
+        "quantity": "6",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P06",
+        "designation": "Produit FICTIF L021 · 6",
+        "quantity": "7",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P07",
+        "designation": "Produit FICTIF L021 · 7",
+        "quantity": "8",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P08",
+        "designation": "Produit FICTIF L021 · 8",
+        "quantity": "9",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P09",
+        "designation": "Produit FICTIF L021 · 9",
+        "quantity": "10",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P10",
+        "designation": "Produit FICTIF L021 · 10",
+        "quantity": "11",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P11",
+        "designation": "Produit FICTIF L021 · 11",
+        "quantity": "12",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P12",
+        "designation": "Produit FICTIF L021 · 12",
+        "quantity": "13",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P13",
+        "designation": "Produit FICTIF L021 · 13",
+        "quantity": "14",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P14",
+        "designation": "Produit FICTIF L021 · 14",
+        "quantity": "15",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P15",
+        "designation": "Produit FICTIF L021 · 15",
+        "quantity": "16",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P16",
+        "designation": "Produit FICTIF L021 · 16",
+        "quantity": "17",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P17",
+        "designation": "Produit FICTIF L021 · 17",
+        "quantity": "18",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P18",
+        "designation": "Produit FICTIF L021 · 18",
+        "quantity": "19",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P19",
+        "designation": "Produit FICTIF L021 · 19",
+        "quantity": "20",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P20",
+        "designation": "Produit FICTIF L021 · 20",
+        "quantity": "21",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P21",
+        "designation": "Produit FICTIF L021 · 21",
+        "quantity": "22",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P22",
+        "designation": "Produit FICTIF L021 · 22",
+        "quantity": "23",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P23",
+        "designation": "Produit FICTIF L021 · 23",
+        "quantity": "24",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P24",
+        "designation": "Produit FICTIF L021 · 24",
+        "quantity": "25",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P25",
+        "designation": "Produit FICTIF L021 · 25",
+        "quantity": "26",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P26",
+        "designation": "Produit FICTIF L021 · 26",
+        "quantity": "27",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P27",
+        "designation": "Produit FICTIF L021 · 27",
+        "quantity": "28",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P28",
+        "designation": "Produit FICTIF L021 · 28",
+        "quantity": "29",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P29",
+        "designation": "Produit FICTIF L021 · 29",
+        "quantity": "30",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P30",
+        "designation": "Produit FICTIF L021 · 30",
+        "quantity": "31",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P31",
+        "designation": "Produit FICTIF L021 · 31",
+        "quantity": "32",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P32",
+        "designation": "Produit FICTIF L021 · 32",
+        "quantity": "33",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P33",
+        "designation": "Produit FICTIF L021 · 33",
+        "quantity": "34",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P34",
+        "designation": "Produit FICTIF L021 · 34",
+        "quantity": "35",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P35",
+        "designation": "Produit FICTIF L021 · 35",
+        "quantity": "36",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P36",
+        "designation": "Produit FICTIF L021 · 36",
+        "quantity": "37",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P37",
+        "designation": "Produit FICTIF L021 · 37",
+        "quantity": "38",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P38",
+        "designation": "Produit FICTIF L021 · 38",
+        "quantity": "39",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P39",
+        "designation": "Produit FICTIF L021 · 39",
+        "quantity": "40",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P40",
+        "designation": "Produit FICTIF L021 · 40",
+        "quantity": "41",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P41",
+        "designation": "Produit FICTIF L021 · 41",
+        "quantity": "42",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P42",
+        "designation": "Produit FICTIF L021 · 42",
+        "quantity": "43",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P43",
+        "designation": "Produit FICTIF L021 · 43",
+        "quantity": "44",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P44",
+        "designation": "Produit FICTIF L021 · 44",
+        "quantity": "45",
+        "unit": "kg"
+      },
+      {
+        "reference": "L021-P45",
+        "designation": "Produit FICTIF L021 · 45",
+        "quantity": "46",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L021.pdf",
+    "number": "FICTIF-BL-L021",
+    "date": "2026-10-13",
+    "bl_id": 41,
+    "supplier_id": 37,
+    "restaurant_id": 1,
+    "line_ids": [
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116
+    ],
+    "issue_ids": [
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ]
+  },
+  {
+    "id": "L022",
+    "titre": "Deuxième restaurant · accès limité",
+    "supplier": "Bianchi secondaire",
+    "mode": "ready_secondary",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Accessible au compte multi-restaurant ; inaccessible à Max et Leo limités au Belvédère.",
+    "rows": [
+      {
+        "reference": "L022-P01",
+        "designation": "Produit FICTIF L022 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L022-P02",
+        "designation": "Produit FICTIF L022 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L022-P03",
+        "designation": "Produit FICTIF L022 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L022.pdf",
+    "number": "FICTIF-BL-L022",
+    "date": "2026-10-13",
+    "bl_id": 42,
+    "supplier_id": 38,
+    "restaurant_id": 2,
+    "line_ids": [
+      117,
+      118,
+      119
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L023",
+    "titre": "Lignes ignorées et archivées",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "filtered_lines",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Une seule ligne active proposée ; lignes ignorées/archivées exclues.",
+    "rows": [
+      {
+        "reference": "L023-P01",
+        "designation": "Produit FICTIF L023 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L023-P02",
+        "designation": "Produit FICTIF L023 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L023-P03",
+        "designation": "Produit FICTIF L023 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L023.pdf",
+    "number": "FICTIF-BL-L023",
+    "date": "2026-10-13",
+    "bl_id": 43,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      120,
+      121,
+      122
+    ],
+    "issue_ids": []
+  },
+  {
+    "id": "L024",
+    "titre": "BL sans numéro ni date",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "pending_no_header",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Valeurs manquantes signalées ; commentaire et pièce conservés sans numéro inventé.",
+    "rows": [
+      {
+        "reference": "L024-P01",
+        "designation": "Produit FICTIF L024 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L024-P02",
+        "designation": "Produit FICTIF L024 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L024-P03",
+        "designation": "Produit FICTIF L024 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L024.pdf",
+    "number": "",
+    "date": null,
+    "bl_id": 44,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      123,
+      124,
+      125
+    ],
+    "issue_ids": [
+      60
+    ]
+  },
+  {
+    "id": "L025",
+    "titre": "Réclamation préparée sans contact mail",
+    "supplier": "FICTIF · Contact manquant",
+    "mode": "prepared",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Lien renseigner le contact ; aucun mailto sans destinataire ; ajout du contact rétablit le bouton.",
+    "rows": [
+      {
+        "reference": "L025-P01",
+        "designation": "Produit FICTIF L025 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L025-P02",
+        "designation": "Produit FICTIF L025 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L025-P03",
+        "designation": "Produit FICTIF L025 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L025.pdf",
+    "number": "FICTIF-BL-L025",
+    "date": "2026-10-13",
+    "claim_id": 13,
+    "bl_id": 45,
+    "supplier_id": 36,
+    "restaurant_id": 1,
+    "line_ids": [
+      126,
+      127,
+      128
+    ],
+    "issue_ids": [
+      61
+    ]
+  },
+  {
+    "id": "L026",
+    "titre": "Note longue, accents et caractères spéciaux",
+    "supplier": "FICTIF · Maison des produits frais et spécialités de montagne pour les établissements de démonstration",
+    "mode": "long_comment",
+    "format": "png",
+    "products": 3,
+    "attendu": "Accents, sauts de ligne et caractères réservés conservés ; pas de script exécuté ; aucun débordement mobile.",
+    "rows": [
+      {
+        "reference": "L026-P01",
+        "designation": "Produit FICTIF L026 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L026-P02",
+        "designation": "Produit FICTIF L026 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L026-P03",
+        "designation": "Produit FICTIF L026 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L026.png",
+    "number": "FICTIF-BL-L026",
+    "date": "2026-10-13",
+    "bl_id": 46,
+    "supplier_id": 39,
+    "restaurant_id": 1,
+    "line_ids": [
+      129,
+      130,
+      131
+    ],
+    "issue_ids": [
+      62
+    ]
+  },
+  {
+    "id": "L027",
+    "titre": "Commentaires BL terminés · un défaut",
+    "supplier": "Crèmerie Les Martels",
+    "mode": "completed_one",
+    "format": "pdf",
+    "products": 3,
+    "attendu": "Retour sur formulaire terminé ; problème en revue ; nouvelle sauvegarde ne duplique rien.",
+    "rows": [
+      {
+        "reference": "L027-P01",
+        "designation": "Produit FICTIF L027 · 1",
+        "quantity": "2",
+        "unit": "kg"
+      },
+      {
+        "reference": "L027-P02",
+        "designation": "Produit FICTIF L027 · 2",
+        "quantity": "3",
+        "unit": "kg"
+      },
+      {
+        "reference": "L027-P03",
+        "designation": "Produit FICTIF L027 · 3",
+        "quantity": "4",
+        "unit": "kg"
+      }
+    ],
+    "file": "fictif-aizy/v21/L027.pdf",
+    "number": "FICTIF-BL-L027",
+    "date": "2026-10-13",
+    "bl_id": 47,
+    "supplier_id": 34,
+    "restaurant_id": 1,
+    "line_ids": [
+      132,
+      133,
+      134
+    ],
+    "issue_ids": [
+      63
+    ]
+  }
+]

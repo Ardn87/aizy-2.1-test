@@ -1,0 +1,27 @@
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    command: ["/bin/sh", "/app/.newcode/start.sh"]
+    restart: unless-stopped
+    environment:
+      AIZY_DATABASE_ENGINE: sqlite3
+      AIZY_SQLITE_PATH: /data/aizy.sqlite3
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DJANGO_USE_X_FORWARDED_PROTO: "1"
+      MEDIA_ROOT: /data/media
+      STATIC_ROOT: /data/staticfiles
+      AIZY_DEMO_CREDENTIALS_FILE: /data/demo-credentials.json
+    volumes:
+      - aizy_data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/sante/', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 120s
+
+volumes:
+  aizy_data: {}

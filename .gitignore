@@ -33,7 +33,6 @@ docs/verification-19/*.png
 /output/*.zip
 
 # Jeu de données et documents de recette conservés dans le dépôt privé de sauvegarde.
-/jeu-donnees-fictif-aizy-2.1/
 /output/recette-aizy-2.1/
 /keys.example.json
 /docker-tunnel

@@ -11,11 +11,11 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY . /app/
 RUN useradd --create-home --uid 1000 django \
-    && mkdir -p /app/media /app/staticfiles /app/backups \
-    && chown -R django:django /app
+    && mkdir -p /app/media /app/staticfiles /app/backups /data \
+    && chown -R django:django /app /data
 
 USER django
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["gunicorn", "facture_project.wsgi:application", "--bind", "0.0.0.0:8000"]

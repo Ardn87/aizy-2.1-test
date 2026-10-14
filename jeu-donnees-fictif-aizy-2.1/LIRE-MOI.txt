@@ -1,0 +1,20 @@
+JEU FICTIF AIZY 2.1
+
+171 scénarios : socle 1.1 (78), cas BL/commentaires 2.1 (27), factures mixtes (2), matrice réclamation (64).
+Toutes les données et les pièces sont fictives. Les identités Bianchi, Crèmerie Les Martels et Culturefood servent à tester les logos ; les documents ne proviennent pas de ces entreprises.
+Dans la copie GitHub de test, le premier démarrage NewCode charge automatiquement ce paquet dans une base vide. NE PAS le réimporter dans une base remplie : l’importeur refusera sans rien supprimer.
+Pour une autre copie 2.1 vide : bash Importer-dans-Aizy.sh /chemin/vers/la/copie-2.1.
+Le paquet n’inclut ni comptes, ni mots de passe, ni clés API. Il conserve les comptes existants et refuse la 2.0, toute version différente et toute base métier déjà remplie.
+Le fichier empreintes.json protège les pièces, fixtures et scripts contre un import de fichiers modifiés.
+
+Les états OCR sont préparés : aucun appel API ne crée ces données. L006 et le cas ancien d’analyse en cours n’ont volontairement pas de job actif : ce sont des états simulés stables, pas une analyse réelle bloquée.
+Les nouveaux défauts sur BL restent Montant à déterminer quand aucune quantité en défaut et aucun prix justifié ne sont confirmés.
+Les cellules Livraison / Avoir reçu représentent une transition refusée tant que le montant est inconnu ; la base reste à Avoir attendu pour ces deux cellules.
+La date de référence est le 13 octobre 2026. Les délais/attentes peuvent changer avec la date réelle.
+
+Repérage : cas-couverts.csv (Cxxx), cas-livraison-2.1.json (Lxxx), cas-mixtes-2.1.json (Mxxx), matrice-reclamations-2.1.json (Rxxx).
+La checklist historique des 477 procédures reste dans la copie locale originale ; cas-couverts.csv repère les scénarios fournis ici.
+La copie NewCode conserve les essais dans son volume privé ; le jeu n’écrase jamais une base déjà remplie.
+Les comptes générés au premier démarrage NewCode donnent accès aux deux restaurants fictifs pour Reception et Revue ; les administrateurs voient tout.
+Les PDF/photos peuvent être déposés pour comparer l’OCR réel. Les cinq UPLOAD-xx de la procédure ne sont pas déjà en base et servent à tester un nouveau dépôt.
+Pour un envoi mail réel, remplacer l’adresse .invalid par une boîte de test contrôlée. Le texte est dans le corps du mail, sans pièce jointe.

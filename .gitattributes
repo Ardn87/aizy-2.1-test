@@ -1,1 +1,5 @@
 *.sh text eol=lf
+*.pdf binary
+*.png binary
+*.jpg binary
+jeu-donnees-fictif-aizy-2.1/*.csv -text -diff

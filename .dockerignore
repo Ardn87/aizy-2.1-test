@@ -12,3 +12,4 @@ media/*
 staticfiles/*
 !staticfiles/.gitkeep
 backups/
+!jeu-donnees-fictif-aizy-2.1/media/**

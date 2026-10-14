@@ -91,6 +91,18 @@ DATABASES = {
     }
 }
 
+database_engine = os.getenv("AIZY_DATABASE_ENGINE", "postgresql").strip()
+if database_engine == "sqlite3":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.getenv("AIZY_SQLITE_PATH", str(BASE_DIR / "db.sqlite3")),
+            "OPTIONS": {"timeout": 30},
+        }
+    }
+elif database_engine != "postgresql":
+    raise ImproperlyConfigured("AIZY_DATABASE_ENGINE doit valoir postgresql ou sqlite3.")
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
