@@ -1,0 +1,16 @@
+services:
+  web:
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn facture_project.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120"
+    environment:
+      DJANGO_DEBUG: "0"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Définir DJANGO_SECRET_KEY}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Définir DJANGO_ALLOWED_HOSTS}
+      DJANGO_SESSION_COOKIE_SECURE: "1"
+      DJANGO_CSRF_COOKIE_SECURE: "1"
+  worker:
+    environment:
+      DJANGO_DEBUG: "0"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Définir DJANGO_SECRET_KEY}

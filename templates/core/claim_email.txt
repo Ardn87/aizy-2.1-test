@@ -1,0 +1,30 @@
+{% autoescape off %}Bonjour,
+
+Nous avons relevé les écarts et problèmes ci-dessous. Merci de vérifier ces éléments et de nous proposer une correction, un remplacement ou un avoir adapté.
+
+Réclamation n° {{ claim.pk }} — {{ claim.fournisseur.nom }}
+{{ claim.fournisseur.restaurant.nom }}
+{% for invoice in invoices %}
+Facture {{ invoice.number }} — {{ invoice.date }}
+{% for line in invoice.lines %}- {{ line.product }}{% if line.reference %} ({{ line.reference }}){% endif %}
+  Quantité facturée : {{ line.quantity }} {{ line.unit }}
+  Prix facturé HT : {{ line.invoice_price }} {{ claim.currency }}
+{% if line.category == 'quantity' %}  Livré : {{ line.delivered }} {{ line.unit }} ; déjà crédité : {{ line.credited }} {{ line.unit }} ; différence : {{ line.difference }} {{ line.unit }}
+  BL : {{ line.delivery_numbers|join:', '|default:'Réception confirmée sans BL' }}
+{% else %}  Prix catalogue HT : {{ line.catalogue_price }} {{ claim.currency }}{% if line.initial_reference %} (référence initiale issue des documents){% endif %}
+{% endif %}  Écart HT : {{ line.impact }} {{ claim.currency }}
+{% endfor %}Sous-total facture : {{ invoice.total|floatformat:2 }} {{ claim.currency }}
+{% endfor %}{% for delivery in deliveries %}
+Bon de livraison {{ delivery.number|default:'Numéro non renseigné' }}{% if delivery.date %} — {{ delivery.date }}{% endif %}
+{% for line in delivery.lines %}- {{ line.product }}{% if line.reference %} ({{ line.reference }}){% endif %}
+  Quantité indiquée sur le BL : {{ line.quantity|default_if_none:'Non renseignée' }} {{ line.unit }}
+  Problème : {{ line.comment }}
+{% if line.review_note %}  Précision : {{ line.review_note }}
+{% endif %}  Montant à déterminer
+{% endfor %}{% endfor %}
+{% if has_priced_lines %}Total demandé HT{% if deliveries %} (écarts chiffrés){% endif %} : {{ document_total|floatformat:2 }} {{ claim.currency }}
+{% endif %}{% if deliveries %}Les problèmes de livraison ne sont pas encore chiffrés. Merci de confirmer la solution et, si applicable, le montant de la régularisation.
+{% endif %}
+Merci de votre retour.
+{{ claim.fournisseur.restaurant.nom }}
+{{ claim.fournisseur.restaurant.adresse }}{% endautoescape %}

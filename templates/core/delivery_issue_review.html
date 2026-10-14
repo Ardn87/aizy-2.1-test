@@ -1,0 +1,69 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Problèmes de livraison · Aizy{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'review/review.css' %}">{% endblock %}
+{% block content %}
+<section class="price-review delivery-issue-review">
+  <nav class="review-tabs delivery-issue-tabs" aria-label="État des problèmes de livraison">
+    <a href="?restaurant={{ scope.restaurant }}&amp;supplier={{ scope.supplier }}&amp;state=pending" class="{% if state == 'pending' %}active{% endif %}"{% if state == 'pending' %} aria-current="page"{% endif %}>À revoir <b>{{ pending_count }}</b></a>
+    <a href="?restaurant={{ scope.restaurant }}&amp;supplier={{ scope.supplier }}&amp;state=history" class="{% if state == 'history' %}active{% endif %}"{% if state == 'history' %} aria-current="page"{% endif %}>Historique <b>{{ history_count }}</b></a>
+  </nav>
+
+  {% if current %}
+  <nav class="review-progress" aria-label="Parcourir les problèmes de livraison">{% for n in numbers %}{% if n %}<a href="?{{ base_query }}&amp;position={{ n }}" class="{% if n == position %}active{% endif %}"{% if n == position %} aria-current="page"{% endif %} aria-label="Problème {{ n }} sur {{ total }}">{{ n }}</a>{% else %}<span>…</span>{% endif %}{% endfor %}</nav>
+  <div class="review-rail">
+    {% if previous %}<a class="review-peek previous" href="?{{ base_query }}&amp;position={{ position|add:'-1' }}"><small>PRÉCÉDENT</small><h3>{{ previous.display_product }}</h3><p>{{ previous.display_supplier }} · BL {{ previous.display_delivery_number }}</p><span class="peek-arrow">←</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+
+    <article class="review-card delivery-issue-card" data-delivery-issue="{{ current.pk }}">
+      <header class="review-card-top">
+        {% if current.logo %}<div class="review-logo" aria-hidden="true"><img src="{% static current.logo %}" alt=""></div>{% endif %}
+        <span class="review-supplier">{{ current.display_supplier }}</span>
+        <span class="review-tag{% if current.state == 'dismissed' %} missing{% endif %}">{{ current.get_state_display }}</span>
+        <h2>{{ current.display_product }}</h2>
+        <p class="review-reference">BL {{ current.display_delivery_number }} · {{ current.display_delivery_date|date:'d/m/Y'|default:'Date à vérifier' }}<br>{{ current.display_restaurant }}</p>
+      </header>
+
+      <div class="delivery-issue-body">
+        <div class="delivery-issue-facts">
+          <div><span>Référence</span><strong>{{ current.display_reference }}</strong></div>
+          <div><span>Quantité indiquée sur le BL</span><strong>{% if current.display_quantity != None %}{{ current.display_quantity|floatformat:'-3' }}{% else %}À vérifier{% endif %} <small>{{ current.display_unit }}</small></strong></div>
+        </div>
+        <div class="delivery-issue-comment"><span>Commentaire de réception</span><p>{{ current.comment }}</p></div>
+        <p class="delivery-issue-meta">Signalé par {{ current.reported_by|default:'Utilisateur supprimé' }} · {{ current.created_at|date:'d/m/Y H:i' }}</p>
+
+        {% if current.source_modified %}<div class="delivery-source-warning" role="alert"><strong>Données extraites modifiées depuis le signalement.</strong><span>Vérifiez le produit et la quantité actuels avant de décider.</span></div>{% endif %}
+
+        {% if current.state == 'pending' %}
+        <form method="post" action="{% url 'delivery_issue_action' current.pk %}" class="delivery-issue-actions">
+          {% csrf_token %}<input type="hidden" name="restaurant" value="{{ scope.restaurant }}"><input type="hidden" name="supplier" value="{{ scope.supplier }}"><input type="hidden" name="state" value="{{ state }}"><input type="hidden" name="position" value="{{ position }}">
+          <label for="delivery-review-note">Note de revue <small>facultative</small></label>
+          <textarea id="delivery-review-note" name="review_note" maxlength="2000" rows="2" placeholder="Précision utile pour le suivi"></textarea>
+          <div><button class="action-button green" type="submit" name="action" value="confirm">Confirmer le problème</button><button class="action-button red" type="submit" name="action" value="dismiss">Écarter le signalement</button></div>
+        </form>
+        {% else %}
+        <div class="delivery-review-decision"><strong>{{ current.get_state_display }}</strong><span>{{ current.reviewed_by|default:'Utilisateur supprimé' }} · {{ current.reviewed_at|date:'d/m/Y H:i' }}</span>{% if current.review_note %}<p>{{ current.review_note }}</p>{% endif %}</div>
+        {% endif %}
+        {% if not current.delivery_archived %}
+        <details name="delivery-review-panel" class="action-panel proof-panel delivery-issue-proof">
+          <summary class="text-button">Consulter le BL original</summary>
+          <div class="panel-body">
+            <h3>Bon de livraison {{ current.display_delivery_number }}</h3>
+            {% if current.preview_type == 'image' %}<img class="review-document" src="{% url 'bon_livraison_file' current.delivery.pk %}" alt="Bon de livraison original" loading="lazy">
+            {% elif current.preview_type == 'pdf' %}<iframe class="review-document" title="Bon de livraison original" src="{% url 'bon_livraison_file' current.delivery.pk %}" loading="lazy"></iframe>
+            {% else %}<p>{% if current.delivery.fichier %}L’aperçu de ce fichier n’est pas disponible.{% else %}Le fichier original n’est pas disponible.{% endif %}</p>{% endif %}
+            <a href="{% url 'bon_livraison_file' current.delivery.pk %}?download=1">Télécharger le BL original</a>
+          </div>
+        </details>
+        {% endif %}
+        <div class="delivery-issue-links">{% if current.claim_id_for_display %}<a href="{% url 'supplier_claims' %}?claim={{ current.claim_id_for_display }}">Voir la réclamation fournisseur →</a>{% endif %}{% if current.delivery_archived %}<span>BL original archivé</span>{% endif %}</div>
+      </div>
+    </article>
+
+    {% if next %}<a class="review-peek next" href="?{{ base_query }}&amp;position={{ position|add:'1' }}"><small>SUIVANT</small><h3>{{ next.display_product }}</h3><p>{{ next.display_supplier }} · BL {{ next.display_delivery_number }}</p><span class="peek-arrow">→</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+  </div>
+
+  <form class="review-jump" method="get"><input type="hidden" name="restaurant" value="{{ scope.restaurant }}"><input type="hidden" name="supplier" value="{{ scope.supplier }}"><input type="hidden" name="state" value="{{ state }}"><label>Aller à la fiche <input type="number" name="position" min="1" max="{{ total }}" value="{{ position }}"></label><button class="outline-button">Aller</button><span>{{ total }} fiche{{ total|pluralize }} · lot {{ page.number }}/{{ page.paginator.num_pages }} (40 maximum)</span></form>
+  {% else %}<div class="review-empty"><span>✓</span><h2>{% if state == 'history' %}Aucun problème traité{% else %}Aucun problème de livraison à revoir{% endif %}</h2><p>{% if state == 'history' %}Les décisions prises apparaîtront dans cet historique.{% else %}Les signalements saisis après l’analyse des BL apparaîtront ici.{% endif %}</p></div>{% endif %}
+
+  <div class="review-filterbar"><form class="review-filters" method="get"><label>Restaurant<select name="restaurant"><option value="">Tous les restaurants</option>{% for restaurant in restaurants %}<option value="{{ restaurant.pk }}"{% if scope.restaurant == restaurant.pk|stringformat:'s' %} selected{% endif %}>{{ restaurant.nom }}</option>{% endfor %}</select></label><label>Fournisseur<select name="supplier"><option value="">Tous les fournisseurs</option>{% for supplier in suppliers %}<option value="{{ supplier.pk }}"{% if scope.supplier == supplier.pk|stringformat:'s' %} selected{% endif %}>{{ supplier.nom }} · {{ supplier.restaurant.nom }}</option>{% endfor %}</select></label><input type="hidden" name="state" value="{{ state }}"><button class="outline-button">Filtrer</button></form></div>
+</section>
+{% endblock %}

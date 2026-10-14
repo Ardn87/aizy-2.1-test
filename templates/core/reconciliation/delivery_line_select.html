@@ -1,0 +1,1 @@
+<label>Ligne du BL<select class="form-select" name="delivery_line" required><option value="">Choisir une livraison…</option>{% for l in delivery_lines %}<option value="{{ l.pk }}">BL {{ l.bon_livraison }} · {{ l }} · {{ l.quantite_livree|default_if_none:'?' }} {{ l.unite }}</option>{% endfor %}</select></label>

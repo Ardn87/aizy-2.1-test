@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Restaurants{% endblock %}
+
+{% block content %}
+  <section class="projects-dashboard">
+    <div class="projects-dashboard-header">
+      <div>
+        <h1 class="projects-title">Restaurants</h1>
+        <p class="projects-subtitle">Restaurants actifs.</p>
+      </div>
+      <a href="{% url 'restaurant_create' %}" class="btn btn-primary btn-sm">Nouveau restaurant</a>
+    </div>
+
+    {% if restaurants %}
+      <section class="project-list" aria-label="Liste des restaurants">
+        {% for restaurant in restaurants %}
+          <article class="project-row project-row--compact">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <a href="{% url 'restaurant_detail' restaurant.pk %}" class="project-row-main">
+              <span class="project-avatar project-avatar-blue">{{ restaurant.nom|slice:":1"|upper }}</span>
+              <span class="project-copy">
+                <span class="project-name">
+                  {{ restaurant.nom }}
+                  <span class="project-role">Restaurant</span>
+                </span>
+                <span class="project-meta">
+                  {% if restaurant.adresse %}{{ restaurant.adresse|truncatechars:90 }}{% else %}Adresse non renseignée{% endif %}
+                </span>
+              </span>
+            </a>
+            <div class="project-row-stats">
+              <span class="badge text-bg-light">Devise {{ restaurant.devise_defaut }}</span>
+              <span class="project-stat"><span class="project-stat-strong">{{ restaurant.fournisseurs_actifs_count }}</span> fournisseur(s)</span>
+              <div class="project-row-actions">
+                <a href="{% url 'restaurant_detail' restaurant.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+                <a href="{% url 'restaurant_update' restaurant.pk %}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="project-empty">
+        <h2 class="h5 mb-2">Aucun restaurant actif</h2>
+        <p class="text-secondary mb-0">Les restaurants actifs apparaîtront ici.</p>
+      </section>
+    {% endif %}
+  </section>
+{% endblock %}

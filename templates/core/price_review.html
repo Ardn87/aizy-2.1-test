@@ -1,0 +1,81 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Revue des prix · Aizy{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'review/review.css' %}">{% endblock %}
+{% block content %}
+<section class="price-review">
+
+
+  <div class="review-tools">
+    <nav class="review-tabs" aria-label="État des fiches"><a class="{% if state == 'pending' %}active{% endif %}" href="?restaurant={{ scope.restaurant }}&supplier={{ scope.supplier }}">À traiter <b>{{ pending_count }}</b></a><a class="{% if state == 'deferred' %}active{% endif %}" href="?restaurant={{ scope.restaurant }}&supplier={{ scope.supplier }}&state=deferred">En attente <b>{{ deferred_count }}</b></a></nav>
+    <div class="review-links">{% if last_event and last_event.line_id %}<form method="post" action="{% url 'review_undo' %}">{% csrf_token %}<input type="hidden" name="event" value="{{ last_event.pk }}"><input type="hidden" name="restaurant" value="{{ scope.restaurant }}"><input type="hidden" name="supplier" value="{{ scope.supplier }}"><input type="hidden" name="state" value="{{ state }}"><input type="hidden" name="position" value="{{ position }}"><button class="text-button">Annuler ma dernière décision</button></form>{% endif %}{% if nav_can_manage_business %}<a href="{% url 'supplier_claims' %}">Réclamations <b>{{ claims_count }}</b></a>{% endif %}</div>
+  </div>
+
+
+  {% if current %}
+  <nav class="review-progress" aria-label="Progression des fiches">{% for n in numbers %}{% if n %}<a href="?{{ base_query }}&position={{ n }}" class="{% if n == position %}active{% endif %}" {% if n == position %}aria-current="step"{% endif %}>{{ n }}</a>{% else %}<span>…</span>{% endif %}{% endfor %}</nav>
+  <div class="review-rail">
+    {% if previous %}<a class="review-peek previous" href="?{{ base_query }}&position={{ position|add:'-1' }}" aria-label="Fiche précédente"><small>PRÉCÉDENT</small><h3>{{ previous.produit }}</h3><p>{{ previous.supplier.nom }}</p><span class="peek-arrow">←</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+    <article class="review-card" data-review-line="{{ current.line.pk }}">
+      <div class="review-card-top">
+        {% if current.logo %}<div class="review-logo" aria-hidden="true"><img src="{% static current.logo %}" alt=""></div>{% endif %}
+        <span class="review-supplier">{{ current.supplier.nom }}</span>
+        <span class="review-tag {% if current.status != 'ecart_prix' %}missing{% endif %}">{{ current.status_label }}</span>
+        <h2>{{ current.produit|default:'Produit à compléter' }}</h2>
+        <p class="review-reference">{{ current.line.reference_produit|default:current.line.ean }}{% if current.line.quantite != None %} · {{ current.line.quantite|floatformat:'-3' }} {{ current.line.unite }}{% else %} · Quantité à vérifier{% endif %}<br>{{ current.invoice.numero_facture|default:'Numéro de facture à compléter' }} · {{ current.invoice.date_facture|date:'d/m/Y' }} · {{ current.supplier.restaurant.nom }}</p>
+      </div>
+      <div class="review-compare"><div class="review-price invoiced"><span>Prix facturé HT</span><strong>{% if current.prix_facture != None %}{{ current.prix_facture|floatformat:2 }} <small>{{ current.invoice.devise }}</small>{% else %}À vérifier{% endif %}</strong></div><span class="price-arrow">→</span><div class="review-price expected"><span>Prix catalogue HT</span><strong>{% if current.prix_catalogue != None %}{{ current.prix_catalogue|floatformat:2 }} <small>{{ current.invoice.devise }}</small>{% else %}À compléter{% endif %}</strong></div></div>
+      <p class="review-impact">{% if current.impact != None %}Impact sur cette facture : <strong>{{ current.impact|floatformat:2 }} {{ current.invoice.devise }}</strong>{% else %}Impact à vérifier{% endif %}</p>
+      {% if current.status == "produit_ambigu" %}<p class="review-wait">Plusieurs lignes catalogue partagent cet identifiant. {% if nav_can_manage_business %}<a href="{% url 'catalogue_detail' current.catalogue.pk %}">Vérifier le catalogue</a>{% else %}<span>Vérifier le catalogue · à compléter par un gestionnaire</span>{% endif %}.</p>{% endif %}
+      {% if current.decision %}<p class="review-wait">En attente : {{ current.decision.reason }}</p>{% endif %}
+      {% if current.existing_claim %}<p class="review-wait">Déjà dans la réclamation n° {{ current.existing_claim.pk }} · {{ current.existing_claim.get_state_display }}.{% if current.existing_claim_category == 'price' %} Les données de prix ont changé.{% else %} Réclamation de quantité.{% endif %} {% if nav_can_manage_business %}<a href="{% url 'supplier_claims' %}?claim={{ current.existing_claim.pk }}">Voir la réclamation →</a>{% endif %}</p>{% endif %}
+      <div class="review-actions">
+        {% if current.initial_reference %}<p class="panel-note">Prix de référence initial issu des documents · tarif fournisseur non confirmé.</p>{% endif %}
+        {% if current.status == 'unite_a_verifier' %}<p class="panel-note">{% if nav_can_manage_business %}<a href="{% url 'supplier_units' current.supplier.pk %}">Confirmer l’unité ou le conditionnement</a>{% else %}<span>Confirmer l’unité ou le conditionnement · à compléter par un gestionnaire</span>{% endif %}</p>{% endif %}
+        {% if current.conversion_factor and current.conversion_factor != 1 %}<p class="panel-note">Prix catalogue ramené à l’unité facturée · facteur confirmé {{ current.conversion_factor }}.</p>{% endif %}
+        {% if current.show_claim_action %}
+          {% if current.can_prepare_claim %}
+          <form class="claim-panel claim-inline" method="post" action="{% url 'review_action' current.line.pk %}">
+            {% include 'core/review/action_fields.html' %}<input type="hidden" name="action" value="claim">
+            {% if current.requires_claim_confirmation %}<input type="hidden" name="confirm_line" value="1">{% endif %}
+            <button class="action-button red" type="submit" title="Ajouter cette ligne au brouillon du fournisseur">Préparer une réclamation</button>
+          </form>
+          {% else %}
+          <details name="review-panel" class="action-panel claim-panel">
+            <summary class="action-button red">Préparer une réclamation</summary>
+            <div class="panel-body">
+              <p>À compléter : {{ current.claim_missing_fields|default:'les données de prix' }}.</p>
+              {% if nav_can_manage_business %}<a href="{% url 'facture_detail' current.invoice.pk %}">Compléter la facture →</a>{% else %}<p>Corrigez les données extraites, ou contactez un gestionnaire pour le numéro et la date.</p>{% endif %}
+            </div>
+          </details>
+          {% endif %}
+        {% endif %}
+        {% if current.can_price %}
+        <form class="price-panel price-inline" method="post" action="{% url 'review_action' current.line.pk %}" data-price-inline>
+          {% include 'core/review/action_fields.html' %}<input type="hidden" name="action" value="price">
+          <button class="action-button green" type="submit" data-price-confirm>{% if current.catalogue_line %}Modifier le tarif{% else %}Créer le produit{% endif %}</button>
+          <div class="price-inline-fields" id="price-inline-fields" data-price-fields>
+            <label for="review-catalogue-price">Prix unitaire HT · {{ current.invoice.devise }}</label>
+            <input id="review-catalogue-price" type="number" inputmode="decimal" step="0.01" min="0" max="9999999999.99" name="price" required {% if current.prix_facture != None %}value="{{ current.prix_facture|stringformat:'.2f' }}"{% endif %}>
+            <p>Prérempli avec le prix facturé.</p>
+            <details class="price-scope"><summary>Portée du tarif</summary><p>{{ current.catalogue.nom }} · {% if current.initial_reference %}Référence initiale sans période contractuelle{% else %}{{ current.catalogue.date_debut|date:'d/m/Y' }} → {{ current.catalogue.date_fin|date:'d/m/Y'|default:'Sans date de fin' }}{% endif %}. Les factures concernées seront recalculées ; l’ancien prix reste dans l’historique.</p></details>
+            <button type="button" class="text-button" data-price-cancel hidden>Annuler</button>
+          </div>
+        </form>
+        {% endif %}
+        {% if current.can_associate %}<details name="review-panel" class="action-panel associate-panel"><summary class="outline-button">Associer à un produit</summary><div class="panel-body"><h3>Choisir le produit du catalogue</h3><form method="post" action="{% url 'review_action' current.line.pk %}">{% include 'core/review/action_fields.html' %}<input type="hidden" name="action" value="associate"><label>Produit<select name="target" required><option value="">Choisir un produit</option>{% for c in choices %}<option value="{{ c.pk }}">{{ c.designation }} · {{ c.reference_produit|default:c.ean }} · {{ c.unite }} · {{ c.prix_unitaire_ht|default_if_none:'Prix absent' }}</option>{% endfor %}</select></label><p>Cette correspondance sera réutilisée pour cette référence chez ce fournisseur.</p><button class="action-button green">Associer et recalculer</button></form></div></details>{% endif %}
+        <details name="review-panel" class="action-panel proof-panel"><summary class="text-button">Consulter la facture</summary><div class="panel-body"><h3>Facture {{ current.invoice.numero_facture }}</h3>{% if current.is_image %}<img class="review-document" src="{% url 'review_invoice_file' current.invoice.pk %}" alt="Facture originale">{% else %}<iframe class="review-document" title="Facture originale" src="{% url 'review_invoice_file' current.invoice.pk %}"></iframe>{% endif %}<a href="{% url 'review_invoice_file' current.invoice.pk %}?download=1">Télécharger le document original</a></div></details>
+        <details name="review-panel" class="action-panel defer-panel"><summary class="text-button">Traiter plus tard →</summary><div class="panel-body"><h3>Mettre en attente</h3><form method="post" action="{% url 'review_action' current.line.pk %}">{% include 'core/review/action_fields.html' %}<input type="hidden" name="action" value="defer"><label>Motif<textarea name="reason" maxlength="2000" required>{{ current.decision.reason }}</textarea></label><button class="action-button green">Enregistrer le report</button></form></div></details>
+        <details name="review-panel" class="action-panel correction-panel"><summary class="text-button">Corriger les données extraites</summary><div class="panel-body"><h3>Corriger cette ligne de facture</h3><form method="post" action="{% url 'review_action' current.line.pk %}">{% include 'core/review/action_fields.html' %}<input type="hidden" name="action" value="correct">{{ correction_form.as_p }}<button class="action-button green">Enregistrer et recalculer</button></form></div></details>
+        <details name="review-panel" class="action-panel history-panel"><summary class="text-button">Historique</summary><div class="panel-body"><h3>Décisions sur cette fiche</h3>{% for event in history %}<p>{{ event.date_creation|date:'d/m/Y H:i' }} · {{ event.actor|default:'Utilisateur supprimé' }} · {{ event.label }}{% if event.undone %} (annulée){% endif %}</p>{% empty %}<p>Aucune décision enregistrée.</p>{% endfor %}</div></details>
+      </div>
+    </article>
+    {% if next %}<a class="review-peek next" href="?{{ base_query }}&position={{ position|add:'1' }}" aria-label="Fiche suivante"><small>ENSUITE</small><h3>{{ next.produit }}</h3><p>{{ next.supplier.nom }}</p><span class="peek-arrow">→</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+  </div>
+  <form class="review-jump" method="get"><input type="hidden" name="restaurant" value="{{ scope.restaurant }}"><input type="hidden" name="supplier" value="{{ scope.supplier }}"><input type="hidden" name="state" value="{{ state }}"><label>Aller à la fiche<input type="number" name="position" min="1" max="{{ total }}" value="{{ position }}"></label><button class="outline-button">Aller</button><span>{{ total }} fiches · lot {{ page.number }}/{{ page.paginator.num_pages }} (40 maximum)</span></form>
+  {% else %}<div class="review-empty">{% if alerts and state != 'deferred' %}<span>!</span><h2>Aucune fiche de prix disponible</h2><p>Les contrôles à compléter sont détaillés en bas de cette page.</p>{% elif state == 'deferred' %}<h2>Aucune fiche en attente</h2>{% elif deferred_count %}<h2>{{ deferred_count }} fiche{{ deferred_count|pluralize }} en attente</h2><p>Des points ont été reportés. Retrouvez-les dans l’onglet « En attente ».</p>{% else %}<span>✓</span><h2>Aucune différence à traiter</h2><p>Les comparaisons disponibles n’ont plus de point à traiter.</p>{% endif %}{% if nav_can_manage_business %}<a href="{% url 'supplier_claims' %}">Consulter les réclamations</a>{% endif %}</div>{% endif %}
+  <div class="review-filterbar">
+    <form class="review-filters" method="get"><label>Restaurant<select name="restaurant"><option value="">Tous les restaurants</option>{% for r in restaurants %}<option value="{{ r.pk }}" {% if scope.restaurant == r.pk|stringformat:'s' %}selected{% endif %}>{{ r.nom }}</option>{% endfor %}</select></label><label>Fournisseur<select name="supplier"><option value="">Tous les fournisseurs</option>{% for s in suppliers %}<option value="{{ s.pk }}" {% if scope.supplier == s.pk|stringformat:'s' %}selected{% endif %}>{{ s.nom }} · {{ s.restaurant.nom }}</option>{% endfor %}</select></label><input type="hidden" name="state" value="{{ state }}"><button class="outline-button">Filtrer</button></form>
+  </div>
+  {% if alerts %}<details class="review-alerts" {% if not current %}open{% endif %}><summary>{{ alerts|length }} facture{{ alerts|length|pluralize }} en attente de contrôle</summary>{% for alert in alerts %}<p>{% if nav_can_manage_business %}<a href="{% url 'facture_detail' alert.invoice.pk %}">{{ alert.invoice.fournisseur.nom }} · {{ alert.invoice.numero_facture|default:'Numéro à compléter' }}</a>{% else %}<span>{{ alert.invoice.fournisseur.nom }} · {{ alert.invoice.numero_facture|default:'Numéro à compléter' }}</span>{% endif %} — {{ alert.message }}</p>{% endfor %}</details>{% endif %}
+</section>
+{% endblock %}

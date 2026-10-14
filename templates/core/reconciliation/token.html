@@ -1,0 +1,2 @@
+{% csrf_token %}<input type="hidden" name="token" value="{{ token }}">
+{% if queue_scope %}<input type="hidden" name="from_queue" value="1"><input type="hidden" name="queue_state" value="{{ status }}"><input type="hidden" name="queue_supplier" value="{{ supplier }}"><input type="hidden" name="queue_q" value="{{ query }}"><input type="hidden" name="queue_position" value="{{ position }}">{% endif %}

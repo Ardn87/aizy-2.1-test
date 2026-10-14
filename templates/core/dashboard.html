@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Accueil · Aizy{% endblock %}
+{% block content %}
+{% include 'core/includes/home_menu_icons.html' %}
+<section class="home-menu">
+  <header class="home-menu-heading"><div><span class="eyebrow">BIENVENUE DANS AIZY</span><h1>Que souhaitez-vous faire ?</h1><p>Simplifiez vos contrôles, chaque jour.</p></div></header>
+  {% for group in nav_groups %}{% if group.key == 'daily' %}
+  <section class="home-menu-group group-daily" aria-label="Actions principales">
+    {% include 'core/includes/home_menu_cards.html' %}
+  </section>
+  {% endif %}{% endfor %}
+  {% for group in nav_groups %}{% if group.key == 'documents' %}
+  <section class="home-menu-group group-documents" aria-label="Déposer des documents">{% include 'core/includes/home_menu_cards.html' %}</section>
+  {% endif %}{% endfor %}
+  <details class="home-menu-fold home-secondary-menu">
+    <summary>
+      <span class="home-fold-heading">
+      <span class="home-fold-copy"><strong>Références et administration</strong></span>
+      {% if home_counts.attention %}<span class="home-admin-warning" title="{{ home_counts.failed }} analyse(s) échouée(s) et {{ home_counts.blocked }} facture(s) avec contrôle bloqué"><span aria-hidden="true">!</span> {{ home_counts.attention }} à vérifier</span>{% endif %}
+      <span class="home-fold-control"><span class="home-fold-show">Afficher</span><span class="home-fold-hide">Réduire</span><span class="home-fold-mark" aria-hidden="true"></span></span>
+      </span>
+      <span class="home-fold-description">Catalogues, fournisseurs, historique et gestion.</span>
+    </summary>
+    <div class="home-secondary-groups home-fold-content">
+    {% for group in nav_groups %}{% if group.key != 'daily' and group.key != 'documents' %}
+      <section class="home-menu-group group-{{ group.key }}" aria-labelledby="menu-{{ group.key }}">
+        <header><h2 id="menu-{{ group.key }}">{{ group.title }}</h2></header>
+        {% include 'core/includes/home_menu_cards.html' %}
+      </section>
+    {% endif %}{% endfor %}
+    </div>
+  </details>
+</section>
+{% endblock %}

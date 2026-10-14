@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block content %}
+  <section class="content-shell">
+    <h1 class="h4 mb-3">Déconnexion</h1>
+    <p class="text-secondary mb-4">Confirmer la fermeture de la session.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Se déconnecter</button>
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary ms-2">Annuler</a>
+    </form>
+  </section>
+{% endblock %}

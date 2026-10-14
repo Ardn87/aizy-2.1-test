@@ -1,0 +1,22 @@
+<nav class="home-menu-grid" aria-label="{% if group.key == 'daily' %}Actions principales{% else %}{{ group.title }}{% endif %}">
+  {% for section in group.sections %}
+  <a class="home-menu-link menu-{{ section.name }}{% if group.key == 'daily' or group.key == 'documents' %} home-primary-link{% endif %}" href="{{ section.url }}">
+    {% if group.key == 'daily' or group.key == 'documents' %}
+    <span class="home-card-heading">
+      <span class="nav-illustration illustration-{{ section.icon }}" aria-hidden="true"><svg><use href="#home-{{ section.icon }}"></use></svg></span>
+      <strong>{{ section.label }}</strong><span class="home-menu-arrow" aria-hidden="true">→</span>
+    </span>
+    {% else %}<span class="nav-illustration illustration-{{ section.icon }}" aria-hidden="true"><svg><use href="#home-{{ section.icon }}"></use></svg></span>{% endif %}
+    <span class="home-menu-copy{% if group.key == 'daily' or group.key == 'documents' %} home-card-content{% endif %}">
+      {% if group.key != 'daily' and group.key != 'documents' %}<strong>{{ section.label }}</strong>{% endif %}
+      <span>{{ section.description }}</span>
+      {% if section.name == 'price_review' %}<span class="home-task-count" data-home-count="price"><b>{{ home_counts.price }}</b> à traiter</span>
+      {% elif section.name == 'reconciliation_queue' %}<span class="home-task-count" data-home-count="reconcile"><b>{{ home_counts.reconcile }}</b> à traiter</span>
+      {% elif section.name == 'delivery_issue_review' %}<span class="home-task-count" data-home-count="delivery-issues"><b>{{ home_counts.delivery_issues }}</b> à revoir</span>
+      {% elif section.name == 'supplier_claims' %}<span class="home-task-count" data-home-count="claims"><b>{{ home_counts.claims }}</b> en cours</span>
+      {% elif section.name == 'work_documents' and home_counts.attention %}<span class="home-data-warning">{% if home_counts.failed %}{{ home_counts.failed }} analyse{{ home_counts.failed|pluralize }} échouée{{ home_counts.failed|pluralize }}{% endif %}{% if home_counts.failed and home_counts.blocked %} · {% endif %}{% if home_counts.blocked %}{{ home_counts.blocked }} facture{{ home_counts.blocked|pluralize }} avec contrôle bloqué{% endif %}</span>{% endif %}
+    </span>
+    {% if group.key != 'daily' and group.key != 'documents' %}<span class="home-menu-arrow" aria-hidden="true">→</span>{% endif %}
+  </a>
+  {% endfor %}
+</nav>

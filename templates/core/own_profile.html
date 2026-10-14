@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Mon profil{% endblock %}
+{% block content %}
+<header class="document-detail-header mb-4">
+  <div><h1 class="h3">Mon profil</h1><p class="text-secondary mb-0">Modifiez vos informations personnelles.</p></div>
+  <a href="{% url 'own_password' %}" class="btn btn-outline-secondary btn-sm">Changer mon mot de passe</a>
+</header>
+<form method="post" class="form-shell workflow-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div class="d-flex flex-wrap gap-2">
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">Retour</a>
+  </div>
+</form>
+{% endblock %}

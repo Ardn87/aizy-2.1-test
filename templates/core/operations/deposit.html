@@ -1,0 +1,81 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Déposer un document · Aizy{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'review/review.css' %}"><link rel="stylesheet" href="{% static 'css/deposit.css' %}">{% endblock %}
+{% block content %}
+<section class="price-review deposit-view">
+  <header class="review-title"><div><span class="eyebrow">RÉCEPTION{% if form.single_restaurant %} · {{ form.single_restaurant.nom }}{% endif %}</span><h1>Déposer un document</h1></div></header>
+  <div class="deposit-stage"{% if resume_feedback_url %} data-auto-feedback-url="{{ resume_feedback_url }}"{% endif %}>
+    <article class="review-card deposit-card">
+      <form method="post" enctype="multipart/form-data" data-deposit-form>
+        {% csrf_token %}
+        <div class="review-card-top deposit-card-top">
+          <h2>Votre document</h2>
+          <p class="deposit-intro">Une photo ou un fichier, puis c’est envoyé.</p>
+          <fieldset class="deposit-kind"><legend class="visually-hidden">Type de document</legend><label><input type="radio" name="kind" value="facture" {% if form.kind.value != 'bon_livraison' and form.kind.value != 'combined' %}checked{% endif %}><span>Facture <small>ou avoir</small></span></label><label><input type="radio" name="kind" value="bon_livraison" {% if form.kind.value == 'bon_livraison' %}checked{% endif %}><span>Bon de livraison</span></label><label><input type="radio" name="kind" value="combined" {% if form.kind.value == 'combined' %}checked{% endif %}><span>BL + facture <small>sur le même document</small></span></label></fieldset>
+          <div class="deposit-field-error" data-error="kind">{{ form.kind.errors }}</div>
+          <div class="delivery-comment-choice" data-delivery-comment-choice {% if form.kind.value != 'bon_livraison' %}hidden{% endif %}>
+            <label for="id_delivery_comments">
+              <input id="id_delivery_comments" type="checkbox" name="delivery_comments" value="1" data-delivery-comments {% if form.delivery_comments.value %}checked{% endif %}>
+              <span><strong>J’ai des commentaires à apporter concernant ce BL</strong><small>Après l’analyse, vous pourrez signaler les produits en défaut.</small></span>
+            </label>
+            <p>Un seul BL peut être envoyé avec ce suivi.</p>
+            <div class="deposit-field-error" data-error="delivery_comments">{{ form.delivery_comments.errors }}</div>
+          </div>
+          <div class="deposit-pickers">
+            <label class="deposit-choice camera-choice" for="deposit-camera" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 5l1.5-2h5L16 5h3a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/><circle cx="12" cy="13" r="4"/></svg><strong>Prendre une photo</strong><small>Avec la caméra du téléphone</small></label>
+            <label class="deposit-choice" for="id_files" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V10z"/><path d="M13 3v7h7M8 15h8M8 18h5"/></svg><strong>Ajouter une photo ou un fichier</strong><small>Galerie photo, PDF ou image</small></label>
+          </div>
+          <input class="deposit-file-input" aria-hidden="true" type="file" id="deposit-camera" name="files" accept="image/jpeg,image/png" capture="environment" tabindex="-1">
+          <input class="deposit-file-input" aria-hidden="true" type="file" id="id_files" name="files" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" multiple tabindex="-1">
+          <noscript><style>.deposit-pickers,.deposit-file-input{display:none!important}</style><label for="fallback-camera">Prendre une photo</label><input id="fallback-camera" type="file" name="files" accept="image/jpeg,image/png" capture="environment"><label for="fallback-files">Ajouter une photo ou un fichier</label><input id="fallback-files" type="file" name="files" accept=".pdf,.jpg,.jpeg,.png" multiple></noscript>
+          <p class="deposit-file-help">PDF, JPG ou PNG · 20 Mo par fichier</p>
+          <div class="deposit-field-error" data-error="files">{{ form.files.errors }}</div>
+          <div class="deposit-context">
+            {% if form.single_restaurant %}{{ form.restaurant.as_hidden }}{% else %}<div><label for="{{ form.restaurant.id_for_label }}">Restaurant</label>{{ form.restaurant }}</div>{% endif %}
+            <div><label for="{{ form.fournisseur.id_for_label }}">Fournisseur</label>{{ form.fournisseur }}</div>
+          </div>
+          <div class="deposit-field-error" data-error="restaurant">{{ form.restaurant.errors }}</div><div class="deposit-field-error" data-error="fournisseur">{{ form.fournisseur.errors }}</div>
+        </div>
+        <div class="deposit-card-body">
+          <div class="deposit-selection" data-deposit-selection hidden><div class="deposit-selection-heading"><b data-selection-count></b><small>Vous pouvez ajouter d’autres documents.</small></div><div class="deposit-previews" data-deposit-previews></div></div>
+          <div class="deposit-notice" role="status" aria-live="polite" data-deposit-notice>{{ form.non_field_errors }}</div>
+          <div class="deposit-field-error deposit-comment-limit" data-comment-file-error></div>
+          <details class="deposit-duplicate" {% if form.duplicate_reason.errors or form.duplicate_reason.value %}open{% else %}hidden{% endif %}><summary>Conserver une copie déjà déposée</summary><label for="{{ form.duplicate_reason.id_for_label }}">Pourquoi conserver ce doublon ?</label>{{ form.duplicate_reason }}<div class="deposit-field-error" data-error="duplicate_reason">{{ form.duplicate_reason.errors }}</div></details>
+          <button type="submit" class="action-button green deposit-submit" data-deposit-submit>Envoyer le document <span aria-hidden="true">→</span></button>
+          <p class="deposit-footer-note">Votre document sera analysé automatiquement.</p>
+        </div>
+      </form>
+      <section class="deposit-receipt" data-deposit-receipt hidden tabindex="-1">
+        <div class="review-card-top">
+          <span class="deposit-receipt-icon" data-receipt-icon aria-hidden="true">✓</span>
+          <h2 data-receipt-title>Document reçu</h2>
+          <p data-receipt-summary></p>
+        </div>
+        <div class="deposit-card-body">
+          <div data-receipt-standard><p>L’analyse se poursuit. Vous pouvez déposer un autre document.</p></div>
+          <div class="delivery-feedback-progress" data-feedback-progress hidden>
+            <span class="delivery-feedback-spinner" aria-hidden="true"></span>
+            <p role="status" aria-live="polite" data-feedback-status>Analyse du BL en cours…</p>
+          </div>
+          <div class="delivery-feedback-content" data-feedback-content hidden></div>
+          <button class="action-button green deposit-new-button" type="button" data-deposit-new>Nouveau dépôt →</button>
+        </div>
+      </section>
+    </article>
+    {% if pending_feedback_deliveries %}
+      <aside class="pending-feedbacks" data-pending-feedbacks>
+        <div class="pending-feedbacks-heading"><div><span class="eyebrow">À TERMINER</span><h2>Commentaires en attente</h2></div><span>{{ pending_feedback_page.paginator.count }}</span></div>
+        <div class="pending-feedback-list">
+          {% for delivery in pending_feedback_deliveries %}
+            <button type="button" class="pending-feedback-item" data-resume-feedback data-url="{% url 'delivery_feedback' delivery.pk %}" {% if delivery.pk == resume_feedback_id %}data-auto="true"{% endif %}>
+              <span><strong>{{ delivery.numero_bon_livraison|default:"Bon de livraison" }}</strong><small>{{ delivery.fournisseur.nom }}{% if delivery.date_livraison %} · {{ delivery.date_livraison|date:"d/m/Y" }}{% endif %}</small></span><b aria-hidden="true">→</b>
+            </button>
+          {% endfor %}
+        </div>
+        {% if pending_feedback_page.paginator.num_pages > 1 %}<nav class="pending-feedback-pages" aria-label="Parcourir les commentaires en attente">{% if pending_feedback_page.has_previous %}<a href="?feedback_page={{ pending_feedback_page.previous_page_number }}">← Plus récents</a>{% endif %}<span>Page {{ pending_feedback_page.number }}/{{ pending_feedback_page.paginator.num_pages }}</span>{% if pending_feedback_page.has_next %}<a href="?feedback_page={{ pending_feedback_page.next_page_number }}">Plus anciens →</a>{% endif %}</nav>{% endif %}
+      </aside>
+    {% endif %}
+    <p class="deposit-batch-note">Une photo ou un fichier = un document · jusqu’à 10 par envoi.</p>
+  </div>
+</section>
+{% endblock %}

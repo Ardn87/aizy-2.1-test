@@ -1,0 +1,98 @@
+.deposit-stage{max-width:660px;margin:38px auto 0}.deposit-card-top{padding:26px 32px 22px}.deposit-kind{display:flex;border:0;background:#dfece6;border-radius:12px;padding:5px;gap:5px;width:100%;max-width:390px;margin:0 auto 24px}.deposit-kind label{flex:1;margin:0;position:relative;cursor:pointer}.deposit-kind input{position:absolute;width:1px;height:1px;opacity:0;padding:0;margin:0;clip-path:inset(50%)}.deposit-kind span{display:flex;justify-content:center;align-items:center;gap:5px;text-align:center;min-height:48px;padding:9px 12px;border-radius:9px;color:#176c62;font-size:14px;font-weight:650}.deposit-kind small{font-size:10px;font-weight:400}.deposit-kind input:checked+span{background:#fff;box-shadow:0 2px 9px #203e3010}.deposit-kind input:focus-visible+span{outline:3px solid #4b9c89;outline-offset:2px}.deposit-card h2{font-size:27px;margin-bottom:6px}.deposit-intro{font-size:13px;color:#627581;margin:0 0 24px;text-align:center}.deposit-context{display:flex;gap:16px;width:100%}.deposit-context>div{flex:1;min-width:0}.deposit-context label{font-size:12px;font-weight:600}.deposit-context select{margin-bottom:0;min-height:46px}.deposit-context input[type=hidden]{display:none}.deposit-card-body{padding:26px 32px}.deposit-pickers{display:grid;grid-template-columns:1fr 1fr;gap:16px}.deposit-choice{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;border:1px solid #cbd8d4;border-radius:13px;min-height:154px;padding:20px 12px;cursor:pointer;background:#fff;color:#176c62!important;transition:background .15s,box-shadow .15s}.deposit-choice:hover{background:#f1f7f4;box-shadow:0 3px 12px #2642360d}.camera-choice{background:#edf5f1;border-color:#c2dbd0}.deposit-choice svg{width:35px;height:35px}.deposit-choice strong{font-size:14px;font-weight:650}.deposit-choice small{font-size:11px;color:#748493}.deposit-file-input{position:absolute;width:1px!important;height:1px!important;padding:0!important;margin:0!important;opacity:0;clip-path:inset(50%);border:0!important}.deposit-file-help{font-size:11px;text-align:center;color:#748493;margin:14px 0 22px}.deposit-field-error,.deposit-notice{font-size:12px;color:#a34537}.deposit-field-error:empty,.deposit-notice:empty{display:none}.deposit-field-error{width:100%;margin-top:6px}.deposit-field-error ul{list-style:none;padding:0;margin:0}.deposit-selection{margin:24px 0}.deposit-selection-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;margin-bottom:12px}.deposit-selection-heading small{color:#748493;font-size:11px}.deposit-previews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.deposit-preview{position:relative;border:1px solid #d6e0df;border-radius:10px;overflow:hidden;background:#f5f8f6}.deposit-preview-image{width:100%;height:120px;object-fit:contain;display:block;background:#eef2ef}.deposit-preview-icon{height:120px;display:grid;place-items:center;color:#176c62;font-size:18px;font-weight:650;letter-spacing:.06em}.deposit-preview-copy{padding:10px;overflow:hidden}.deposit-preview-name{font-size:11px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#273640}.deposit-preview-size{display:block;color:#748493;font-size:10px;margin-top:3px}.deposit-preview-remove{position:absolute;right:6px;top:6px;display:grid;place-items:center;width:30px;height:30px;background:#fff;border:1px solid #d6e0df;border-radius:50%;color:#8b4038;font-size:20px!important;line-height:1;box-shadow:0 2px 6px #27364012}.deposit-duplicate{font-size:11px;color:#748493;margin:24px 0}.deposit-duplicate summary{cursor:pointer}.deposit-duplicate label{margin-top:14px}.deposit-duplicate textarea,.deposit-duplicate input{width:100%;margin-bottom:0}.deposit-submit{font-size:14px;min-height:50px;display:flex;justify-content:center;align-items:center;gap:16px}.deposit-footer-note{text-align:center;font-size:11px;color:#748493;margin:13px 0 0}.deposit-batch-note{text-align:center;font-size:11px;color:#627581;margin:20px 0}.deposit-receipt{text-align:center}.deposit-receipt .review-card-top{padding:32px}.deposit-receipt-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#d5e8df;color:#176c62;font-size:27px;margin-bottom:20px}.deposit-receipt p{font-size:13px;color:#627581}.deposit-view [hidden]{display:none!important}.deposit-view button:disabled{opacity:.55;cursor:default}.deposit-view :focus-visible{outline:3px solid #4b9c89;outline-offset:3px}
+@media(max-width:700px){.deposit-stage{margin-top:24px}.deposit-card-top,.deposit-card-body{padding:20px}.deposit-card h2{font-size:25px}.deposit-kind{margin-bottom:20px}.deposit-kind span{font-size:13px;padding:8px}.deposit-kind small{display:none}.deposit-intro{font-size:12px;margin-bottom:18px}.deposit-pickers{gap:12px}.deposit-choice{min-height:132px;padding:16px 8px;gap:9px}.deposit-choice strong{font-size:12px}.deposit-choice small{font-size:10px}.deposit-choice svg{width:30px;height:30px}.deposit-context{flex-direction:column;gap:12px}.deposit-previews{grid-template-columns:repeat(2,minmax(0,1fr))}.deposit-selection-heading{align-items:start;flex-direction:column;gap:4px}.deposit-submit{min-height:52px}.deposit-duplicate{margin:20px 0}.deposit-preview-image,.deposit-preview-icon{height:115px}.deposit-card .errorlist{font-size:11px}.deposit-view .review-title h1{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.deposit-choice{transition:none}}
+
+.deposit-kind{max-width:none;flex-wrap:wrap}.deposit-kind label{flex:1 1 120px}.deposit-kind span{flex-direction:column;gap:2px;height:100%}@media(max-width:430px){.deposit-kind label:last-child{flex-basis:100%}.deposit-kind label:last-child span{min-height:38px}}
+
+/* Put document selection first, before the metadata needed for sending. */
+.deposit-card-top .deposit-pickers{width:100%;margin-top:0}
+.deposit-card-top .deposit-kind{margin:6px 0 20px}
+.deposit-card-top .deposit-choice{border-width:2px;min-height:132px}
+.deposit-card-top .camera-choice{background:#176c62;color:#fff!important;border-color:#176c62}
+.deposit-card-top .camera-choice small{color:#d5e8e2}
+.deposit-card-top .camera-choice:hover{background:#12564e;border-color:#12564e}
+.deposit-card-top .deposit-choice:not(.camera-choice){background:#fff;border-color:#9bbeb3}
+.deposit-card-top .deposit-choice:not(.camera-choice):hover{background:#f1f7f4}
+.deposit-card-top .deposit-file-help{margin:12px 0 18px}
+.deposit-stage{margin-top:24px}
+@media(max-width:700px){.deposit-stage{margin-top:14px}.deposit-card-top .deposit-choice{min-height:126px;padding:14px 8px}.deposit-card-top .deposit-kind{margin-bottom:16px}.deposit-card-top .deposit-intro{margin-bottom:16px}}
+
+.delivery-comment-choice{width:100%;margin:0 0 20px}
+.delivery-comment-choice>label{display:flex;align-items:flex-start;gap:12px;margin:0;padding:14px 16px;border:1px solid #b9d5ca;border-radius:11px;background:#f7faf8;color:#273640;cursor:pointer;text-align:left}
+.delivery-comment-choice input[type=checkbox]{flex:none;width:20px;height:20px;margin:1px 0 0;padding:0;accent-color:#176c62}
+.delivery-comment-choice span{display:block;min-width:0}
+.delivery-comment-choice strong{display:block;font-size:13px;line-height:1.4}
+.delivery-comment-choice small{display:block;margin-top:4px;color:#627581;font-size:11px;line-height:1.45}
+.delivery-comment-choice>p{margin:7px 3px 0;text-align:left;color:#71808b;font-size:10px}
+.deposit-comment-limit{margin:0 0 14px;text-align:center}
+
+.deposit-receipt .deposit-card-body{min-height:124px}
+.deposit-receipt-icon{transition:background .15s,color .15s}
+.deposit-receipt[data-feedback-state=processing] .deposit-receipt-icon,
+.deposit-receipt[data-feedback-state=empty] .deposit-receipt-icon{background:#f4ecd4;color:#87672b}
+.deposit-receipt[data-feedback-state=failed] .deposit-receipt-icon{background:#f7e1dc;color:#a34537}
+.deposit-new-button{margin-top:18px}
+.delivery-feedback-progress{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:82px}
+.delivery-feedback-progress p{margin:0;max-width:480px;line-height:1.55}
+.delivery-feedback-spinner{width:24px;height:24px;border:3px solid #c8dbd3;border-top-color:#176c62;border-radius:50%;animation:deposit-spin .8s linear infinite}
+@keyframes deposit-spin{to{transform:rotate(360deg)}}
+.delivery-feedback-content{text-align:left}
+
+.delivery-feedback-form{margin:0;text-align:left}
+.delivery-feedback-heading{text-align:center;margin-bottom:18px}
+.delivery-feedback-heading h3{margin:6px 0 5px;font-size:20px;font-weight:650;color:#273640}
+.delivery-feedback-heading p{margin:0;color:#627581;font-size:12px}
+.delivery-product-list{display:grid;gap:10px;margin:0;padding:0;border:0}
+.delivery-product{min-width:0;border:1px solid #d6e0df;border-radius:11px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.delivery-product.is-selected{border-color:#68a991;box-shadow:0 0 0 2px #d6e9e1}
+.delivery-product-select{display:flex!important;align-items:center;gap:12px;margin:0;padding:14px;cursor:pointer;color:#273640!important}
+.delivery-product-select input[type=checkbox]{position:absolute;width:1px!important;height:1px!important;margin:0!important;padding:0!important;opacity:0;clip-path:inset(50%)}
+.delivery-product-check{display:grid;place-items:center;flex:none;width:25px;height:25px;border:2px solid #a9c1b8;border-radius:7px;background:#fff;color:transparent;font-size:14px;font-weight:750}
+.delivery-product-select input:checked+.delivery-product-check{border-color:#176c62;background:#176c62;color:#fff}
+.delivery-product-select input:focus-visible+.delivery-product-check{outline:3px solid #4b9c89;outline-offset:3px}
+.delivery-product-copy{display:block;min-width:0}
+.delivery-product-copy strong{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.delivery-product-copy small{display:block;min-height:15px;margin-top:4px;color:#71808b;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.delivery-product-comment{padding:0 14px 14px 51px}
+.delivery-product-comment label{font-size:11px;font-weight:650;color:#627581}
+.delivery-product-comment textarea{width:100%;margin:6px 0 0;resize:vertical;min-height:84px}
+.delivery-feedback-error:empty{display:none}
+.delivery-feedback-error{margin:13px 0 0!important;padding:10px 12px;border-radius:7px;background:#fff0eb;color:#a34537!important;text-align:left;font-size:12px!important}
+.delivery-feedback-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:13px;margin-top:18px}
+.delivery-feedback-actions .text-button{padding:10px 4px;text-align:center}
+
+.pending-feedbacks{margin-top:18px;padding:16px;border:1px solid #cddbd6;border-radius:14px;background:#ffffffd9;box-shadow:0 6px 20px #263d340c;backdrop-filter:blur(7px)}
+.pending-feedbacks-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.pending-feedbacks-heading h2{margin:3px 0 0;font-size:16px;font-weight:650}
+.pending-feedbacks-heading>span{display:grid;place-items:center;flex:none;min-width:27px;height:27px;padding:0 7px;border-radius:20px;background:#e2eee8;color:#176c62;font-size:11px;font-weight:700}
+.pending-feedback-list{display:grid;gap:7px}
+.pending-feedback-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0;padding:11px 12px;border:1px solid #dce5e1;border-radius:9px;background:#fff;color:#273640;text-align:left}
+.pending-feedback-item:hover,.pending-feedback-item.is-active{border-color:#8cb9a8;background:#f1f7f4}
+.pending-feedback-item>span{min-width:0}
+.pending-feedback-item strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:650}
+.pending-feedback-item small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;color:#71808b;font-size:10px}
+.pending-feedback-item>b{flex:none;color:#176c62;font-size:19px}
+.pending-feedback-pages{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;font-size:11px;color:#71808b}
+.pending-feedback-pages a{font-weight:650}
+
+@media(max-width:700px){
+  .delivery-comment-choice{margin-bottom:16px}
+  .delivery-comment-choice>label{padding:13px}
+  .delivery-feedback-heading h3{font-size:18px}
+  .delivery-product-select{padding:13px}
+  .delivery-product-comment{padding:0 13px 13px}
+  .delivery-feedback-actions{grid-template-columns:1fr}
+  .delivery-feedback-actions .action-button,.delivery-feedback-actions .text-button{width:100%}
+  .pending-feedbacks{padding:14px}
+}
+@media(max-width:390px){
+  .deposit-pickers{gap:8px}
+  .deposit-card-top .deposit-choice{min-height:118px;padding:12px 6px}
+  .deposit-choice strong{font-size:11px}
+  .delivery-comment-choice strong{font-size:12px}
+  .delivery-product-copy strong{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .delivery-feedback-spinner{animation:none;border-top-color:#c8dbd3;background:#176c62}
+  .delivery-product,.deposit-receipt-icon{transition:none}
+}

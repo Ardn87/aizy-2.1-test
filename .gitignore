@@ -1,0 +1,42 @@
+.env
+keys.json
+*.keys.json
+COMPTES_TEST.txt
+github
+OPENAI
+__pycache__/
+*.py[cod]
+*.sqlite3
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+media/*
+!media/.gitkeep
+
+staticfiles/*
+!staticfiles/.gitkeep
+
+backups/
+
+# Captures locales de recette : peuvent contenir les documents importés.
+docs/verification-19/*.png
+
+# Environnement privé de Aizy 2.0
+.local/
+.venv/
+
+# Archives de base et exports privés : hors dépôt destiné aux outils de développement.
+*.dump
+*.tar.gz
+/snapshots/
+/output/*.zip
+
+# Jeu de données et documents de recette conservés dans le dépôt privé de sauvegarde.
+/jeu-donnees-fictif-aizy-2.1/
+/output/recette-aizy-2.1/
+/keys.example.json
+/docker-tunnel
+
+# Métadonnées locales de NewCode.
+.app-factory-project

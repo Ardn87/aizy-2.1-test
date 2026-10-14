@@ -1,0 +1,61 @@
+{% if fournisseurs %}
+  <section class="supplier-table-shell" aria-label="Liste des fournisseurs">
+    <div class="table-responsive">
+      <table class="table supplier-table align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Fournisseur</th>
+            <th scope="col">Restaurant</th>
+            <th scope="col">Devise</th>
+            <th scope="col" class="text-end">Factures</th>
+            <th scope="col" class="text-end">Bons</th>
+            <th scope="col" class="text-end">À valider</th>
+            <th scope="col" class="text-end">Litiges</th>
+            <th scope="col" class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fournisseur in fournisseurs %}
+            <tr>
+              <td class="supplier-name-cell">
+                <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="supplier-table-link">
+                  <span class="supplier-table-avatar" aria-hidden="true">{{ fournisseur.nom|slice:":1"|upper }}</span>
+                  <span class="supplier-name-copy">
+                    <span class="supplier-table-name">{{ fournisseur.nom }}</span>
+                    <span class="supplier-table-path">{{ fournisseur.restaurant.nom }} / {{ fournisseur.nom }}</span>
+                  </span>
+                </a>
+              </td>
+              <td class="supplier-muted-cell">{{ fournisseur.restaurant.nom }}</td>
+              <td><span class="badge text-bg-light">{{ fournisseur.devise_defaut }}</span></td>
+              <td class="text-end supplier-number">{{ fournisseur.factures_count }}</td>
+              <td class="text-end supplier-number">{{ fournisseur.bons_livraison_count }}</td>
+              <td class="text-end">
+                {% if fournisseur.documents_a_valider_count %}
+                  <span class="badge text-bg-warning">{{ fournisseur.documents_a_valider_count }} à valider</span>
+                {% else %}
+                  <span class="supplier-number-muted">0</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                {% if fournisseur.litiges_count %}
+                  <span class="badge text-bg-danger">{{ fournisseur.litiges_count }} litige(s)</span>
+                {% else %}
+                  <span class="supplier-number-muted">0</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% else %}
+  <section class="content-shell">
+    <h2 class="h5 mb-2">Aucun fournisseur</h2>
+    <p class="text-secondary mb-0">Les fournisseurs actifs apparaîtront ici.</p>
+  </section>
+{% endif %}

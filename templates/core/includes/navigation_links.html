@@ -1,0 +1,1 @@
+{% for section in nav_sections %}<a href="{{ section.url }}" class="app-nav-link{% if section.active %} is-active{% endif %}"{% if section.active %} aria-current="page"{% endif %}><span class="nav-illustration illustration-{{ section.icon }}" aria-hidden="true"><svg><use href="#nav-{{ section.icon }}"></use></svg></span><span>{{ section.label }}</span></a>{% endfor %}

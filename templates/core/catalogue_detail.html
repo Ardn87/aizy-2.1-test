@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load devise %}
+
+{% block title %}Catalogue {{ catalogue.nom|default:catalogue.pk }}{% endblock %}
+
+{% block content %}
+  <section class="document-detail-header mb-4">
+    <div>
+      <a href="{% url 'fournisseur_detail' catalogue.fournisseur.pk %}" class="small text-decoration-none">Retour fournisseur</a>
+      <h1 class="h3 mt-3 mb-1">Catalogue {{ catalogue.nom|default:"sans nom" }}</h1>
+      <p class="text-secondary mb-0">{{ catalogue.fournisseur.nom }} - {{ catalogue.fournisseur.restaurant.nom }}</p>
+    </div>
+    <span class="badge {{ status_badge_class }}">Statut : {{ catalogue.get_statut_display }}</span>
+  </section>
+
+  {% include "core/includes/document_workflow.html" %}
+  <section class="document-section mb-4">
+    <div class="document-section-header">
+      <h2 class="h4 mb-0">Résumé</h2><a href="{% url 'catalogue_columns' catalogue.pk %}" class="btn btn-outline-secondary btn-sm">Colonnes CSV / XLSX</a>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'catalogue_update' catalogue.pk %}" class="btn btn-outline-secondary btn-sm">Modifier les informations</a>
+        {% if nav_can_manage_business %}
+          <form method="post" action="{% url 'catalogue_validate' catalogue.pk %}" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Valider le catalogue</button>
+          </form>
+        {% endif %}
+        <form
+          method="post"
+          action="{% url 'catalogue_ai_reanalyze' catalogue.pk %}"
+          class="m-0 d-inline-flex align-items-center gap-2 flex-wrap"
+          data-ai-submit-form
+          data-ai-loading-label="Analyse..."
+          data-ai-loading-status="Relance IA en cours..."
+          data-ai-confirm-message="Relancer l’analyse IA de ce catalogue ?"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-secondary btn-sm" data-ai-submit-button>
+            <span class="spinner-border spinner-border-sm me-1" aria-hidden="true" hidden data-ai-submit-spinner></span>
+            <span data-ai-submit-label>Relancer l’analyse IA</span>
+          </button>
+          <span class="text-info small" hidden data-ai-submit-status>Relance IA en cours...</span>
+        </form>
+        {% if nav_can_manage_users %}
+          <a href="{% url 'catalogue_delete' catalogue.pk %}" class="btn btn-outline-danger btn-sm">Archiver le catalogue</a>
+        {% endif %}
+        <a href="{% url 'fournisseur_detail' catalogue.fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Retour fournisseur</a>
+      </div>
+    </div>
+
+    <div class="supplier-stats">
+      <div>
+        <span>Nom</span>
+        <strong>{{ catalogue.nom|default:"Non renseigné" }}</strong>
+      </div>
+      <div>
+        <span>Fournisseur</span>
+        <strong>{{ catalogue.fournisseur.nom }}</strong>
+      </div>
+      <div>
+        <span>Période</span>
+        <strong>
+          {{ catalogue.date_debut|date:"d/m/Y"|default:"Début ?" }}
+          -
+          {{ catalogue.date_fin|date:"d/m/Y"|default:"Jusqu’à nouvel ordre" }}
+        </strong>
+      </div>
+      <div>
+        <span>Devise</span>
+        <strong>{{ catalogue.devise|default:"—" }}</strong>
+      </div>
+      <div>
+        <span>Confiance IA</span>
+        <strong>{{ catalogue.confiance_ia|default:"—" }}</strong>
+      </div>
+      <div>
+        <span>Total lignes</span>
+        <strong>{{ catalogue.lignes_count }}</strong>
+      </div>
+      <div>
+        <span>OK</span>
+        <strong>{{ catalogue.lignes_ok_count }}</strong>
+      </div>
+      <div>
+        <span>À vérifier</span>
+        <strong>{{ catalogue.lignes_a_verifier_count }}</strong>
+      </div>
+      <div>
+        <span>Ignorées</span>
+        <strong>{{ catalogue.lignes_ignorees_count }}</strong>
+      </div>
+    </div>
+
+    {% if catalogue.lignes_a_verifier_count %}
+      <div class="alert alert-light border small mb-4" role="alert">
+        Certaines lignes du catalogue doivent être vérifiées.
+      </div>
+    {% endif %}
+
+    {% include "core/includes/document_ai_summary.html" with document=catalogue %}
+  </section>
+
+  <div class="mb-4">
+    {% include "core/includes/document_preview.html" %}
+  </div>
+
+  <section id="lignes-catalogue" class="document-section">
+    <div class="document-section-header">
+      <div>
+        <h2 class="h4 mb-1">Lignes catalogue</h2>
+        <p class="text-secondary small mb-0">Filtrez les lignes à corriger avant validation.</p>
+      </div>
+      <span class="text-secondary small">{{ lignes_page.paginator.count }} ligne(s)</span>
+    </div>
+
+    <form method="get" action="{% url 'catalogue_detail' catalogue.pk %}#lignes-catalogue" class="document-filters mb-3">
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-5">
+          <label for="ligne-q" class="form-label">Référence ou désignation</label>
+          <input
+            type="search"
+            id="ligne-q"
+            name="q"
+            value="{{ line_filters.q }}"
+            class="form-control form-control-sm"
+          >
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="ligne-statut" class="form-label">Statut</label>
+          <select id="ligne-statut" name="statut" class="form-select form-select-sm">
+            <option value="">Toutes</option>
+            {% for value, label in statut_ligne_choices %}
+              <option value="{{ value }}"{% if line_filters.statut == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-6 col-md-auto">
+          <button type="submit" class="btn btn-primary btn-sm w-100">Filtrer</button>
+        </div>
+        {% if line_filters_active %}
+          <div class="col-6 col-md-auto">
+            <a href="{% url 'catalogue_detail' catalogue.pk %}#lignes-catalogue" class="btn btn-outline-secondary btn-sm w-100">Effacer</a>
+          </div>
+        {% endif %}
+      </div>
+    </form>
+
+    {% if lignes_page %}
+      <div class="invoice-lines-table-wrap">
+        <table class="table table-sm align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Référence</th>
+              <th scope="col">Désignation</th>
+              <th scope="col">Unité</th>
+              <th scope="col" class="text-end">Prix HT</th>
+              <th scope="col">Statut</th>
+              <th scope="col" class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ligne in lignes_page %}
+              <tr>
+                <td>
+                  <strong>{{ ligne.reference_produit|default:"—" }}</strong>
+                </td>
+                <td>{{ ligne.designation|default:"—" }}</td>
+                <td>{{ ligne.unite|default:"—" }}</td>
+                <td class="text-end">
+                  {% if ligne.prix_unitaire_ht is not None %}{{ ligne.prix_unitaire_ht|montant_devise:catalogue.devise }}{% else %}—{% endif %}
+                </td>
+                <td>
+                  <span class="badge text-bg-light">{{ ligne.get_statut_ligne_display }}</span>
+                  {% if ligne.corrigee_manuellement %}
+                    <span class="d-block text-secondary small">Corrigée</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <a href="{% url 'ligne_catalogue_update' catalogue.pk ligne.pk %}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if lignes_page.has_other_pages %}
+        <nav class="mt-3" aria-label="Pagination des lignes catalogue">
+          <div class="d-flex flex-wrap gap-2">
+            {% if lignes_page.has_previous %}
+              <a class="btn btn-outline-secondary btn-sm" href="?q={{ line_filters.q }}&statut={{ line_filters.statut }}&page={{ lignes_page.previous_page_number }}#lignes-catalogue">Précédent</a>
+            {% endif %}
+            <span class="text-secondary small align-self-center">Page {{ lignes_page.number }} / {{ lignes_page.paginator.num_pages }}</span>
+            {% if lignes_page.has_next %}
+              <a class="btn btn-outline-secondary btn-sm" href="?q={{ line_filters.q }}&statut={{ line_filters.statut }}&page={{ lignes_page.next_page_number }}#lignes-catalogue">Suivant</a>
+            {% endif %}
+          </div>
+        </nav>
+      {% endif %}
+    {% else %}
+      <p class="text-secondary mb-0">Aucune ligne catalogue ne correspond aux filtres.</p>
+    {% endif %}
+  </section>
+{% endblock %}

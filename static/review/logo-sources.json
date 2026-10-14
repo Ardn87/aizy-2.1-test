@@ -1,0 +1,62 @@
+{
+  "Bianchi": {
+    "source": "https://www.bianchi.ch/wp-content/uploads/2023/12/Bianchi_Logo_Plain_RGB-2.png",
+    "site": "https://www.bianchi.ch/fr/"
+  },
+  "Crèmerie Les Martels": {
+    "source": "https://cremerie-les-martel.ch/wp-content/uploads/2024/04/Logo_cremerie_martel_13_pos.svg",
+    "site": "https://cremerie-les-martel.ch/"
+  },
+  "Del Maitre": {
+    "source": "https://www.delmaitre.ch/wp-content/themes/delmaitre/dist/img/logo-delmaitre.svg",
+    "site": "https://www.delmaitre.ch/"
+  },
+  "Lindt": {
+    "source": "https://www.lindt.ch/static/version1790133289/frontend/Lseu/transactional/fr_CH/images/logo.png",
+    "site": "https://www.lindt.ch/fr/"
+  },
+  "Merat": {
+    "source": "https://www.merat.ch/themes/custom/mer/images/logo.svg",
+    "site": "https://www.merat.ch/fr"
+  },
+  "Michellod": {
+    "source": "https://www.boulangerie-michellod.com/wp-content/uploads/2025/12/logo.svg",
+    "site": "https://www.boulangerie-michellod.com/"
+  },
+  "Pisciculture de Vionnaz": {
+    "source": "https://truites-vionnaz.ch/wp-content/uploads/2026/01/Pisciculture-de-Vionnaz-logo-09-copie.png",
+    "site": "https://truites-vionnaz.ch/"
+  },
+  "Pitoeuf": {
+    "source": "https://pitoeuf.ch/wp-content/uploads/2021/12/logo-3x-300x128.png",
+    "site": "https://pitoeuf.ch/"
+  },
+  "Culturefood": {
+    "source": "https://www.psassets.ch/da9e8a87c5c3fcae956f0e1e19bd696241795347.svg",
+    "site": "https://shop.culturefood.ch/"
+  },
+  "Histand": {
+    "source": "https://www.hiestand.ch/typo3conf/ext/pxaryzta/Resources/Public/Images/logo-hiestand.svg",
+    "site": "https://www.hiestand.ch/fr/"
+  },
+  "Eaux Gazeuse": {
+    "source": "https://eauxgazeuses.ch/logo.svg?v1",
+    "site": "https://eauxgazeuses.ch/"
+  },
+  "Walker": {
+    "source": "https://www.walker.swiss/fr",
+    "site": "https://www.walker.swiss/fr"
+  },
+  "Froneri": {
+    "source": "https://www.froneri.com/fr-CH/",
+    "site": "https://www.froneri.com/fr-CH/"
+  },
+  "Zweifel": {
+    "source": "https://www.zweifel.swiss/fr",
+    "site": "https://www.zweifel.swiss/fr"
+  },
+  "Ristorfoods": {
+    "site": "https://www.ristorfoods.com/fr/catalogues/",
+    "source": "https://www.ristorfoods.com/wp-content/uploads/2022/01/ristorfoods_logo_blue_big.png"
+  }
+}

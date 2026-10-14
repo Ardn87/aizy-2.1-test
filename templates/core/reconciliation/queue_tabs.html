@@ -1,0 +1,7 @@
+<nav class="review-tabs reconcile-card-tabs" aria-label="État des rapprochements">
+<a {% if status == 'attention' %}aria-current="page"{% endif %} href="?state=attention&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">À traiter <b>{{ totals.attention }}</b></a>
+<a {% if status == 'waiting' %}aria-current="page"{% endif %} href="?state=waiting&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">En attente <b>{{ totals.waiting }}</b></a>
+<a {% if status == 'unverified' %}aria-current="page"{% endif %} href="?state=unverified&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">Sans BL <b>{{ totals.unverified }}</b></a>
+<a {% if status == 'matched' %}aria-current="page"{% endif %} href="?state=matched&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">Rapprochées <b>{{ totals.matched }}</b></a>
+<a {% if status == 'all' %}aria-current="page"{% endif %} href="?state=all&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">Toutes</a>
+</nav>

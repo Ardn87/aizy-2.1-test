@@ -1,0 +1,67 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Réclamations fournisseurs · Aizy{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'review/review.css' %}">{% endblock %}
+{% block content %}
+<section class="price-review claim-review">
+  <nav class="review-tabs claim-tabs" aria-label="État des réclamations">{% for tab in quick_filters %}<a href="?filter={{ tab.key }}" class="{% if tab.key == claim_filter %}active{% endif %}" {% if tab.key == claim_filter %}aria-current="page"{% endif %}>{{ tab.label }} <b>{{ tab.count }}</b></a>{% endfor %}</nav>
+
+  {% if claim %}
+  <nav class="review-progress" aria-label="Parcourir les réclamations">{% for n in numbers %}{% if n %}<a href="?filter={{ claim_filter }}&amp;position={{ n }}" class="{% if n == position %}active{% endif %}" {% if n == position %}aria-current="page"{% endif %} aria-label="Réclamation {{ n }} sur {{ total }}">{{ n }}</a>{% else %}<span>…</span>{% endif %}{% endfor %}</nav>
+  <div class="review-rail">
+    {% if previous %}<a class="review-peek previous" href="?filter={{ claim_filter }}&amp;position={{ position|add:'-1' }}"><small>PRÉCÉDENTE</small><h3>{{ previous.fournisseur.nom }}</h3><p>{{ previous.get_state_display }} · N° {{ previous.pk }}</p><span class="peek-arrow">←</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+    <article class="claim-item review-card" id="claim-{{ claim.pk }}">
+      <header class="review-card-top">{% if claim.logo %}<div class="review-logo" aria-hidden="true"><img src="{% static claim.logo %}" alt=""></div>{% endif %}<span class="review-supplier">{{ claim.fournisseur.restaurant.nom }}</span><span class="review-tag {% if claim.state == 'cancelled' or claim.state == 'closed' %}missing{% endif %}">{{ claim.get_state_display }}</span><h2>{{ claim.fournisseur.nom }}</h2><p class="review-reference">Réclamation n° {{ claim.pk }} · {{ claim.date_creation|date:'d/m/Y' }}<br>{{ claim.lines.count }} ligne{{ claim.lines.count|pluralize }} regroupée{{ claim.lines.count|pluralize }}</p></header>
+      <div class="claim-card-body">
+      <div class="claim-amounts"><div><span>{% if claim.has_unpriced_delivery and claim.has_priced_lines %}Montant chiffré{% else %}Montant réclamé{% endif %}</span><strong>{% if claim.has_unpriced_delivery and not claim.has_priced_lines %}À déterminer{% else %}{{ claim.total|floatformat:2 }} <small>{{ claim.currency }}</small>{% endif %}</strong>{% if claim.has_unpriced_delivery and claim.has_priced_lines %}<small>Problèmes de livraison : montant à déterminer</small>{% endif %}</div>{% if claim.state != 'cancelled' %}<div><span>Montant récupéré</span><strong>{{ claim.recovered_amount|floatformat:2 }} <small>{{ claim.currency }}</small></strong></div>{% endif %}</div>
+      <details><summary>{{ claim.lines.count }} ligne{{ claim.lines.count|pluralize }} · Consulter les éléments concernés</summary>
+        <div class="claim-lines">{% for item in claim.lines.all %}<div class="claim-line"><span><b>{{ item.snapshot.product }}</b>
+          {% if item.category == 'delivery' %}
+          <small class="claim-delivery-tag">Problème de livraison · BL {{ item.snapshot.delivery_number|default:'Numéro non renseigné' }}{% if item.snapshot.delivery_date %} · {{ item.snapshot.delivery_date }}{% endif %}</small>
+          <small>Quantité indiquée sur le BL : {{ item.snapshot.quantity|default_if_none:'Non renseignée' }} {{ item.snapshot.unit }}</small>
+          <p class="claim-delivery-comment">{{ item.snapshot.comment }}</p>{% if item.snapshot.review_note %}<small class="claim-delivery-comment">Note de revue : {{ item.snapshot.review_note }}</small>{% endif %}
+          {% if item.delivery_issue and not item.delivery_issue.delivery.archived_at %}<a href="{% url 'bon_livraison_file' item.snapshot.delivery_id %}" target="_blank" rel="noopener">Consulter le BL ↗</a>{% endif %}
+          {% else %}<small>Facture {{ item.snapshot.invoice_number }} · {{ item.snapshot.invoice_date }} · {{ item.snapshot.quantity }} {{ item.snapshot.unit }}</small>
+          {% if item.category == 'quantity' %}<small>Quantité : livré {{ item.snapshot.delivered }} · crédité {{ item.snapshot.credited }} · différence {{ item.snapshot.difference }} {{ item.snapshot.unit }}</small><small>BL : {{ item.snapshot.delivery_numbers|join:', '|default:'Réception confirmée sans BL' }}</small><a href="{% url 'invoice_reconcile' item.snapshot.invoice_id %}">Revoir le rapprochement</a>
+          {% else %}<small>Facturé {{ item.snapshot.invoice_price }} / Catalogue {{ item.snapshot.catalogue_price }} {{ claim.currency }}</small>{% endif %}
+          {% endif %}</span><strong>{% if item.snapshot.impact == None %}À déterminer{% else %}+ {{ item.snapshot.impact }} {{ claim.currency }}{% endif %}</strong></div>{% endfor %}</div>
+      </details>
+      <footer>
+        {% if claim.state == 'draft' %}<form method="post" action="{% url 'claim_state' claim.pk %}">{% csrf_token %}<input type="hidden" name="claim_filter" value="{{ claim_filter }}"><input type="hidden" name="action" value="prepare"><button class="action-button red">Préparer le document</button></form>
+        {% elif claim.state != 'cancelled' %}
+        {% if claim.mail.url %}<a class="action-button green" href="{{ claim.mail.url }}">Envoyer par mail</a>{% else %}<a class="outline-button" href="{% url 'fournisseur_update' claim.fournisseur.pk %}">Renseigner le contact mail</a>{% endif %}
+        <a class="outline-button" href="{% url 'claim_document' claim.pk %}">Télécharger la réclamation</a>{% if claim.state == 'prepared' %}<form method="post" action="{% url 'claim_state' claim.pk %}">{% csrf_token %}<input type="hidden" name="claim_filter" value="{{ claim_filter }}"><input type="hidden" name="action" value="sent"><button class="action-button green">Confirmer que je l’ai envoyée</button></form>{% endif %}{% endif %}
+        {% if claim.state != 'cancelled' %}<span class="claim-recovered">{% if claim.due_date %} · Échéance {{ claim.due_date|date:'d/m/Y' }}{% endif %}</span>{% endif %}
+      </footer>
+      {% if claim.state != 'draft' and claim.state != 'cancelled' %}
+      <details class="claim-preview" open><summary>Visualiser la réclamation</summary>
+        <iframe class="claim-document-preview" title="Aperçu de la réclamation" src="{% url 'claim_document' claim.pk %}?preview=1" sandbox="allow-same-origin" loading="lazy"></iframe>
+      </details>
+      <div class="claim-mail-options">
+        {% if claim.mail.recipient %}<p>À : {{ claim.mail.recipient }}{% if claim.mail.test_address %} · <strong>Adresse fictive de test</strong>{% endif %}</p>{% endif %}
+        <p>Le contenu de la réclamation est prérempli dans le corps du mail.</p>
+      </div>
+      {% endif %}
+      {% if claim.state != 'draft' and claim.state != 'prepared' and claim.state != 'closed' and claim.state != 'cancelled' %}<details class="workflow-panel"><summary>Mettre à jour le suivi / rattacher l’avoir</summary><form method="post" action="{% url 'claim_state' claim.pk %}" class="workflow-form">{% csrf_token %}<input type="hidden" name="claim_filter" value="{{ claim_filter }}">{{ claim.followup_form.as_p }}<button class="btn btn-primary">Enregistrer le suivi</button></form></details>{% endif %}
+      {% if claim.state == 'prepared' %}<p class="mt-3 mb-0 small text-muted">Le document est prêt à transmettre. Aucun email n’est envoyé automatiquement.</p>{% endif %}
+      {% if claim.can_cancel %}
+      <details class="claim-withdraw"><summary class="text-button">Annuler la réclamation</summary>
+        <p>Les écarts et problèmes de livraison reviendront dans leurs revues. L’historique sera conservé.{% if claim.state != 'draft' and claim.state != 'prepared' %} Si elle a été envoyée, prévenez le fournisseur de l’annulation.{% endif %}</p>
+        <form method="post" action="{% url 'claim_state' claim.pk %}">{% csrf_token %}<input type="hidden" name="claim_filter" value="{{ claim_filter }}"><input type="hidden" name="action" value="cancel"><input type="hidden" name="confirmed" value="1"><button class="outline-button">Annuler cette réclamation</button></form>
+      </details>
+      {% endif %}
+      {% if claim.state == 'draft' and nav_can_manage_users %}
+      <details class="claim-delete"><summary class="text-button">Supprimer le brouillon</summary>
+        <p>Ce brouillon sera supprimé. Les écarts et problèmes de livraison reviendront dans leurs revues.</p>
+        <form method="post" action="{% url 'claim_state' claim.pk %}">{% csrf_token %}<input type="hidden" name="claim_filter" value="{{ claim_filter }}"><input type="hidden" name="action" value="delete"><input type="hidden" name="confirmed" value="1"><button class="outline-button">Supprimer ce brouillon</button></form>
+      </details>
+      {% endif %}
+      {% if claim.state == 'cancelled' %}<p class="text-muted mt-3 mb-0">Annulée · conservée dans l’historique.</p>{% endif %}
+      </div>
+    </article>
+    {% if next %}<a class="review-peek next" href="?filter={{ claim_filter }}&amp;position={{ position|add:'1' }}"><small>SUIVANTE</small><h3>{{ next.fournisseur.nom }}</h3><p>{{ next.get_state_display }} · N° {{ next.pk }}</p><span class="peek-arrow">→</span></a>{% else %}<div class="review-peek placeholder" aria-hidden="true"></div>{% endif %}
+  </div>
+  <form class="review-jump" method="get"><input type="hidden" name="filter" value="{{ claim_filter }}"><label>Aller à la réclamation <input type="number" name="position" min="1" max="{{ total }}" value="{{ position }}"></label><span>sur {{ total }}</span><button class="outline-button">Aller</button></form>
+  {% else %}<div class="review-empty"><h2>{% if claim_filter == 'all' %}Aucune réclamation pour le moment{% else %}Aucune réclamation dans cette sélection{% endif %}</h2><p>Ajoutez les écarts depuis la revue des prix, le rapprochement des factures ou la revue des problèmes de livraison.</p></div>{% endif %}
+<div class="review-jump"><a href="{% url 'price_review' %}">Revenir à la revue →</a></div>
+</section>
+{% endblock %}

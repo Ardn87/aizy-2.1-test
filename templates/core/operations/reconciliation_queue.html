@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Rapprochement des factures · Aizy{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'review/review.css' %}"><link rel="stylesheet" href="{% static 'css/reconciliation.css' %}">{% endblock %}
+{% block content %}<section class="price-review reconciliation-review">{% include 'core/reconciliation/queue_tabs.html' %}<div class="review-empty"><span>✓</span><h2>Aucune facture dans cette sélection</h2><p>Les factures sans BL restent consultables dans « Sans BL ».</p><a href="?state=all&amp;supplier={{ supplier }}&amp;q={{ query|urlencode }}">Voir toutes les factures</a></div>{% include 'core/reconciliation/queue_filters.html' %}</section>{% endblock %}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réclamation {{ claim.pk }} — {{ claim.fournisseur.nom }}</title>
+<style>body{font:15px/1.6 Arial,sans-serif;color:#273640;max-width:900px;margin:50px auto;padding:0 25px}h1{color:#176c62;font-size:28px}h2{font-size:19px;margin-top:30px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:10px;text-align:left;border-bottom:1px solid #dce3e6}th{background:#edf5f2}.total{text-align:right;font-weight:bold;color:#b83e36}small{color:#627581}.delivery-comment{white-space:pre-wrap}.unpriced{color:#886222}@media print{body{margin:0}tr{break-inside:avoid}}</style>
+</head><body>
+<small>{{ claim.fournisseur.restaurant.nom }} · {{ claim.fournisseur.restaurant.adresse }}</small>
+<h1>Réclamation fournisseur</h1>
+<p>À l’attention de {{ claim.fournisseur.nom }}<br>Réclamation n° {{ claim.pk }} · {{ claim.date_creation|date:'d/m/Y' }}</p>
+<p>Bonjour,<br>Nous avons relevé les écarts et problèmes ci-dessous. Merci de vérifier ces éléments et de nous proposer une correction, un remplacement ou un avoir adapté.</p>
+{% for invoice in invoices %}
+<h2>Facture {{ invoice.number }} — {{ invoice.date }}</h2>
+<table><thead><tr><th>Produit / référence</th><th>Quantité</th><th>Prix facturé HT</th><th>Référence de contrôle</th><th>Écart HT</th></tr></thead><tbody>
+{% for line in invoice.lines %}
+<tr><td>{{ line.product }}<br><small>{% if line.reference %}{{ line.reference }}{% else %}{{ line.ean|default:'Référence non renseignée' }}{% endif %}{% if line.category == 'quantity' %} · BL : {{ line.delivery_numbers|join:', '|default:'Réception confirmée sans BL' }}{% elif line.initial_reference %} · Prix de référence initial issu des documents{% if line.price_source.number %} · {{ line.price_source.number }}{% endif %}{% else %} · Catalogue du {{ line.catalogue_start }}{% if line.catalogue_end %} au {{ line.catalogue_end }}{% endif %}{% endif %}</small></td>
+<td>{{ line.quantity }} {{ line.unit }}</td><td>{{ line.invoice_price }} {{ claim.currency }}</td>
+<td>{% if line.category == 'quantity' %}Livré {{ line.delivered }} {{ line.unit }}<br>Déjà crédité {{ line.credited }} {{ line.unit }}<br>Différence {{ line.difference }} {{ line.unit }}{% else %}Catalogue {{ line.catalogue_price }} {{ claim.currency }}{% endif %}</td><td>{{ line.impact }} {{ claim.currency }}</td></tr>
+{% endfor %}
+</tbody></table><p class="total">Sous-total facture : {{ invoice.total|floatformat:2 }} {{ claim.currency }}</p>
+{% endfor %}
+{% for delivery in deliveries %}
+<h2>Bon de livraison {{ delivery.number|default:'Numéro non renseigné' }}{% if delivery.date %} — {{ delivery.date }}{% endif %}</h2>
+<table><thead><tr><th>Produit / référence</th><th>Quantité indiquée sur le BL</th><th>Problème de livraison</th></tr></thead><tbody>
+{% for line in delivery.lines %}
+<tr><td>{{ line.product }}<br><small>{{ line.reference|default:'Référence non renseignée' }}</small></td><td>{{ line.quantity|default_if_none:'Non renseignée' }} {{ line.unit }}</td><td><div class="delivery-comment">{{ line.comment }}</div>{% if line.review_note %}<div class="delivery-comment"><strong>Précision :</strong> {{ line.review_note }}</div>{% endif %}<small class="unpriced">Montant à déterminer</small></td></tr>
+{% endfor %}
+</tbody></table>
+{% endfor %}
+{% if has_priced_lines %}<p class="total">Total demandé HT{% if deliveries %} (écarts chiffrés){% endif %} : {{ document_total|floatformat:2 }} {{ claim.currency }}</p>{% endif %}
+{% if deliveries %}<p class="unpriced">Les problèmes de livraison ci-dessus ne sont pas encore chiffrés. Merci de confirmer la solution et, si applicable, le montant de la régularisation.</p>{% endif %}
+<p>Merci de votre retour.<br>{{ claim.fournisseur.restaurant.nom }}</p>
+</body></html>

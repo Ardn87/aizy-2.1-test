@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% load devise %}
+
+{% block title %}Facture {{ facture.numero_facture|default:facture.pk }}{% endblock %}
+
+{% block content %}
+  <section class="document-detail-header mb-4">
+    <div>
+      <a href="{% url 'fournisseur_detail' facture.fournisseur.pk %}" class="small text-decoration-none">Retour fournisseur</a>
+      <h1 class="h3 mt-3 mb-1">Facture {{ facture.numero_facture|default:"sans numéro" }}</h1>
+      <p class="text-secondary mb-0">
+        {{ facture.fournisseur.nom }} - {{ facture.fournisseur.restaurant.nom }} · Devise : {{ facture.devise }}
+      </p>
+    </div>
+    {% if nav_can_manage_business %}
+      <div class="document-header-actions">
+        <span class="badge {{ status_badge_class }}">Statut : {{ facture.get_statut_display }}</span>
+        <form
+          method="post"
+          action="{% url 'facture_ai_reanalyze' facture.pk %}"
+          class="m-0 d-inline-flex align-items-center gap-2 flex-wrap"
+          data-ai-submit-form
+          data-ai-loading-label="Analyse..."
+          data-ai-loading-status="Relance IA en cours..."
+          data-ai-confirm-message="Relancer l’analyse IA de ce document ?"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-secondary btn-sm" data-ai-submit-button>
+            <span class="spinner-border spinner-border-sm me-1" aria-hidden="true" hidden data-ai-submit-spinner></span>
+            <span data-ai-submit-label>Relancer l’analyse IA</span>
+          </button>
+          <span class="text-info small" hidden data-ai-submit-status>Relance IA en cours...</span>
+        </form>
+        {% if nav_can_manage_users %}
+          <a href="{% url 'facture_delete' facture.pk %}" class="btn btn-outline-danger btn-sm">Archiver la facture</a>
+        {% endif %}
+      </div>
+    {% else %}
+      <span class="badge {{ status_badge_class }}">Statut : {{ facture.get_statut_display }}</span>
+    {% endif %}
+  </section>
+
+  {% include "core/includes/document_workflow.html" %}
+  <div class="document-detail-layout">
+    {% include "core/includes/document_preview.html" %}
+
+    <section class="form-shell">
+      {% include "core/includes/document_ai_summary.html" with document=facture %}
+      {% if devise_ia_mismatch %}
+        <div class="alert alert-light border small" role="alert">
+          Devise détectée par l’IA différente de la devise du fournisseur.
+          <span class="text-secondary">
+            Devise fournisseur : {{ facture.fournisseur.devise_defaut }} · Devise détectée : {{ devise_ia_detectee }}
+          </span>
+        </div>
+      {% endif %}
+      <div class="ai-summary mb-4">
+        <h2 class="h6 mb-3">Résumé facture</h2>
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <span class="document-label">Devise</span>
+            <strong>{{ facture.devise }}</strong>
+          </div>
+          <div class="col-12 col-md-4">
+            <span class="document-label">Date de facture</span>
+            <strong>{{ facture.date_facture|date:"d/m/Y"|default:"Non renseignée" }}</strong>
+          </div>
+          <div class="col-12 col-md-4">
+            <span class="document-label">Date de livraison détectée</span>
+            <strong>{{ facture.date_livraison_detectee|date:"d/m/Y"|default:"Non renseignée" }}</strong>
+          </div>
+        </div>
+        <p class="text-secondary small mb-0 mt-3">
+          Date utilisée pour le contrôle catalogue : {{ catalogue_control_date_source }}{% if catalogue_control_date %} ({{ catalogue_control_date|date:"d/m/Y" }}){% endif %}.
+        </p>
+      </div>
+
+      <form method="post" id="facture-detail-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+          {% for field in form %}
+            <div class="{% if field.name == 'note' %}form-grid-full{% endif %}">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+        {% if nav_can_manage_business %}
+          <div class="quick-status-actions mt-4">
+            <span class="text-secondary small">Actions statut</span>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <button type="submit" name="quick_status" value="a_valider" class="btn btn-outline-warning btn-sm">Marquer à valider</button>
+              <button type="submit" name="quick_status" value="validee" class="btn btn-outline-success btn-sm">Valider</button>
+              <button type="submit" name="quick_status" value="litige" class="btn btn-outline-danger btn-sm">Mettre en litige</button>
+            </div>
+          </div>
+        {% endif %}
+        <div class="mt-4 d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+          <a href="{% url 'fournisseur_detail' facture.fournisseur.pk %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  {% if nav_can_manage_business %}
+    <section id="controle-catalogue" class="document-section mt-4">
+      <div class="document-section-header">
+        <div>
+          <h2 class="h4 mb-1">Contrôle catalogue</h2>
+          <p class="text-secondary small mb-0">Comparaison simple avec le catalogue fournisseur validé.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            type="submit"
+            form="facture-detail-form"
+            name="quick_status"
+            value="litige"
+            class="btn btn-outline-danger btn-sm"
+          >
+            Mettre la facture en litige
+          </button>
+        </div>
+      </div>
+
+      {% if catalogue_control.message %}
+        <div class="alert alert-light border small mb-3" role="alert">
+          {{ catalogue_control.message }}
+        </div>
+      {% endif %}
+
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-3">
+          <span class="document-label">Catalogue utilisé</span>
+          {% if catalogue_control.catalogue %}
+            <strong>
+              <a href="{% url 'catalogue_detail' catalogue_control.catalogue.pk %}" class="text-decoration-none">
+                {{ catalogue_control.catalogue.nom|default:"Catalogue sans nom" }}
+              </a>
+            </strong>
+          {% else %}
+            <strong>—</strong>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+          <span class="document-label">Date de contrôle</span>
+          <strong>{{ catalogue_control.date_controle|date:"d/m/Y"|default:"—" }}</strong>
+        </div>
+        <div class="col-12 col-md-3">
+          <span class="document-label">Devise</span>
+          <strong>{{ catalogue_control.devise }}</strong>
+        </div>
+        <div class="col-12 col-md-3">
+          <span class="document-label">Source date</span>
+          <strong>{{ catalogue_control.date_source|default:"—" }}</strong>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md">
+          <span class="document-label">Conformes</span>
+          <strong>{{ catalogue_control.counts.conforme }} ligne(s)</strong>
+        </div>
+        <div class="col-6 col-md">
+          <span class="document-label">Écarts de prix</span>
+          <strong>{{ catalogue_control.counts.ecart_prix }} ligne(s)</strong>
+        </div>
+        <div class="col-6 col-md">
+          <span class="document-label">Produits non trouvés</span>
+          <strong>{{ catalogue_control.counts.produit_non_trouve }} ligne(s)</strong>
+        </div>
+        <div class="col-6 col-md">
+          <span class="document-label">Prix manquants</span>
+          <strong>{{ catalogue_control.counts.prix_manquant }} ligne(s)</strong>
+        </div>
+        <div class="col-6 col-md">
+          <span class="document-label">Unités à vérifier</span>
+          <strong>{{ catalogue_control.counts.unite_a_verifier }} ligne(s)</strong>
+        </div>
+      </div>
+
+      {% if catalogue_control.control_available %}
+        <details id="controle-catalogue-details" class="mt-3">
+          <summary class="btn btn-outline-primary btn-sm mb-3">Voir les écarts</summary>
+          <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-2">
+            <h3 class="h6 mb-0">
+              {% if catalogue_control_show_all %}Toutes les lignes contrôlées{% else %}Lignes à vérifier{% endif %}
+            </h3>
+            {% if catalogue_control_show_all %}
+              <a href="{% url 'facture_detail' facture.pk %}#controle-catalogue-details" class="small text-decoration-none">Masquer les lignes conformes</a>
+            {% else %}
+              <a href="?catalogue_all=1#controle-catalogue-details" class="small text-decoration-none">Afficher aussi les lignes conformes</a>
+            {% endif %}
+          </div>
+
+          {% if catalogue_control_details %}
+            <div class="invoice-lines-table-wrap">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">Produit</th>
+                    <th scope="col">Référence</th>
+                    <th scope="col" class="text-end">Prix facture</th>
+                    <th scope="col" class="text-end">Prix catalogue</th>
+                    <th scope="col" class="text-end">Écart</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col" class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for detail in catalogue_control_details %}
+                    <tr>
+                      <td>{{ detail.produit|default:"—" }}</td>
+                      <td>
+                        {{ detail.reference_produit|default:"—" }}
+                        {% if detail.ean %}
+                          <span class="d-block text-secondary small">{{ detail.ean }}</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-end">
+                        {% if detail.prix_facture is not None %}{{ detail.prix_facture|montant_devise:facture.devise }}{% else %}—{% endif %}
+                      </td>
+                      <td class="text-end">
+                        {% if detail.prix_catalogue is not None %}{{ detail.prix_catalogue|montant_devise:facture.devise }}{% else %}—{% endif %}
+                      </td>
+                      <td class="text-end">
+                        {% if detail.ecart is not None %}{{ detail.ecart|montant_devise:facture.devise }}{% else %}—{% endif %}
+                      </td>
+                      <td>
+                        <span class="badge {% if detail.status == 'conforme' %}text-bg-success{% elif detail.status == 'ecart_prix' %}text-bg-danger{% else %}text-bg-warning{% endif %}">
+                          {{ detail.status_label }}
+                        </span>
+                      </td>
+                      <td class="text-end">
+                        {% if detail.status == "produit_non_trouve" and catalogue_control.catalogue %}
+                          <form method="post" action="{% url 'facture_line_add_to_catalogue' facture.pk detail.invoice_line.pk %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Ajouter au catalogue</button>
+                          </form>
+                        {% else %}
+                          <span class="text-secondary">—</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-secondary mb-0">Aucune ligne problématique à afficher.</p>
+          {% endif %}
+        </details>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  <section id="produits-detectes" class="document-section mt-4">
+    <div class="document-section-header">
+      <div>
+        <h2 class="h4 mb-1">Produits détectés</h2>
+        <p class="text-secondary small mb-0">Lignes extraites automatiquement de la facture.</p>
+      </div>
+      {% if nav_can_manage_business %}
+        <a href="{% url 'facture_lignes_update' facture.pk %}" class="btn btn-outline-secondary btn-sm">Corriger les lignes</a>
+      {% endif %}
+    </div>
+
+    {% if lignes_facture %}
+      <div class="invoice-lines-table-wrap">
+        <table class="table table-sm align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Référence / Produit</th>
+              <th scope="col" class="text-end">Quantité</th>
+              <th scope="col" class="text-end">Prix unitaire HT</th>
+              <th scope="col" class="text-end">Total HT</th>
+              <th scope="col" class="text-end">Total TTC</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ligne in lignes_facture %}
+              <tr>
+                <td>
+                  {% if ligne.reference_produit %}
+                    <strong class="d-block">{{ ligne.reference_produit }}</strong>
+                  {% endif %}
+                  {% if ligne.ean %}
+                    <span class="d-block text-secondary small">{{ ligne.ean }}</span>
+                  {% endif %}
+                  <span class="{% if not ligne.designation %}text-secondary{% endif %}">
+                    {{ ligne.designation|default:"—" }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  {% if ligne.quantite is not None %}
+                    {{ ligne.quantite|floatformat:-3 }}{% if ligne.unite %} {{ ligne.unite }}{% endif %}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if ligne.prix_unitaire_ht is not None %}{{ ligne.prix_unitaire_ht|montant_devise:facture.devise }}{% else %}—{% endif %}
+                </td>
+                <td class="text-end">
+                  {% if ligne.montant_ht is not None %}{{ ligne.montant_ht|montant_devise:facture.devise }}{% else %}—{% endif %}
+                </td>
+                <td class="text-end">
+                  {% if ligne.montant_ttc is not None %}{{ ligne.montant_ttc|montant_devise:facture.devise }}{% else %}—{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="3">Total détecté</th>
+              <td class="text-end">
+                {% if lignes_total_ht is not None %}{{ lignes_total_ht|montant_devise:facture.devise }}{% else %}—{% endif %}
+              </td>
+              <td class="text-end">
+                {% if lignes_total_ttc is not None %}{{ lignes_total_ttc|montant_devise:facture.devise }}{% else %}—{% endif %}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      {% if lignes_total_differs %}
+        <p class="text-secondary small mb-0">Le total des lignes diffère du total de la facture.</p>
+      {% endif %}
+    {% else %}
+      <p class="text-secondary mb-0">Aucun produit détecté pour cette facture.</p>
+    {% endif %}
+  </section>
+{% endblock %}

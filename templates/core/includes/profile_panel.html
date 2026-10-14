@@ -1,0 +1,10 @@
+<div class="profile-panel">
+  <div class="profile-identity">
+    <a class="profile-name" href="{% if nav_can_manage_users %}{% url 'user_update' user.pk %}{% else %}{% url 'own_profile' %}{% endif %}" title="Modifier mon profil">{{ user.get_username }}</a>
+    <span class="profile-role">{{ nav_profile_role }}</span>
+  </div>
+  <div class="profile-actions">
+    <span class="profile-connection" title="Session connectée" role="img" aria-label="Session connectée"><svg class="profile-session-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#176c62" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v9m-5-7a8 8 0 1 0 10 0"/></svg></span>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline-secondary btn-sm profile-logout" type="submit">Déconnexion</button></form>
+  </div>
+</div>

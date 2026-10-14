@@ -1,0 +1,29 @@
+<section class="document-preview-card">
+  <div class="document-preview-header">
+    <h2 class="h5 mb-0">Document original</h2>
+    {% if file_exists and document_preview_type %}
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{{ document_file_url }}" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm">Ouvrir dans un nouvel onglet</a>
+        <a href="{{ document_download_url }}" class="btn btn-outline-secondary btn-sm">Télécharger</a>
+      </div>
+    {% elif file_exists %}
+      <a href="{{ document_download_url }}" class="btn btn-outline-secondary btn-sm">Télécharger</a>
+    {% endif %}
+  </div>
+
+  {% if not file_exists %}
+    <p class="document-preview-message mb-0">Le fichier associé à ce document est introuvable.</p>
+  {% elif document_preview_type == "pdf" %}
+    <iframe
+      src="{{ document_file_url }}"
+      class="document-preview-frame"
+      title="Aperçu du document"
+    ></iframe>
+  {% elif document_preview_type == "image" %}
+    <div class="document-preview-image-wrap">
+      <img src="{{ document_file_url }}" alt="Aperçu du document" class="document-preview-image">
+    </div>
+  {% else %}
+    <p class="document-preview-message mb-0">Aperçu non disponible pour ce type de fichier.</p>
+  {% endif %}
+</section>

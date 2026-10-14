@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une facture{% endblock %}
+
+{% block content %}
+  {% if fournisseur %}
+    <section class="document-detail-header mb-4">
+      <div>
+        <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="small text-decoration-none">Retour fournisseur</a>
+        <h1 class="h3 mt-3 mb-1">Ajouter une facture</h1>
+        <p class="text-secondary mb-0">
+          {{ fournisseur.nom }} - {{ fournisseur.restaurant.nom }} · Devise : {{ fournisseur.devise_defaut }}
+        </p>
+      </div>
+    </section>
+
+    <section class="form-shell">
+      <p class="text-secondary mb-4">Déposez le document. Les informations seront lues automatiquement.</p>
+
+      <form method="post" enctype="multipart/form-data" data-ai-submit-form>
+        {% csrf_token %}
+        <div class="form-grid">
+          {% for field in form %}
+            <div class="{% if field.name == 'note' %}form-grid-full{% endif %}">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="mt-4 d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary" data-ai-submit-button>
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true" hidden data-ai-submit-spinner></span>
+            <span data-ai-submit-label>Envoyer</span>
+          </button>
+          <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+        <p class="text-info small mt-3 mb-0" hidden data-ai-submit-status>Intégration IA en cours...</p>
+      </form>
+    </section>
+  {% else %}
+    <section class="content-shell">
+      <h1 class="h3 mb-3">Ajouter une facture</h1>
+      <p class="text-secondary mb-0">Choisissez d'abord un fournisseur depuis le tableau de bord.</p>
+    </section>
+  {% endif %}
+{% endblock %}

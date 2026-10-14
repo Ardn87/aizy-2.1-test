@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-facture_db}
+      POSTGRES_USER: ${POSTGRES_USER:-facture_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-facture_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-facture_user} -d ${POSTGRES_DB:-facture_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             ${DJANGO_START_COMMAND:-python manage.py runserver 0.0.0.0:8000}"
+    environment: &app_environment
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-${SECRET_KEY:-dev-insecure-change-me}}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-${DEBUG:-1}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-${ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}}
+      DJANGO_TIME_ZONE: ${DJANGO_TIME_ZONE:-Europe/Paris}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+      DJANGO_SECURE_SSL_REDIRECT: ${DJANGO_SECURE_SSL_REDIRECT:-0}
+      DJANGO_SESSION_COOKIE_SECURE: ${DJANGO_SESSION_COOKIE_SECURE:-0}
+      DJANGO_CSRF_COOKIE_SECURE: ${DJANGO_CSRF_COOKIE_SECURE:-0}
+      DJANGO_USE_X_FORWARDED_PROTO: ${DJANGO_USE_X_FORWARDED_PROTO:-0}
+      POSTGRES_DB: ${POSTGRES_DB:-facture_db}
+      POSTGRES_USER: ${POSTGRES_USER:-facture_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-facture_password}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_KEYS_FILE: /run/secrets/facture_keys.json
+      MEDIA_ROOT: ${MEDIA_ROOT:-/app/media}
+      STATIC_ROOT: ${STATIC_ROOT:-/app/staticfiles}
+    volumes: &app_volumes
+      - .:/app:Z
+      - ./keys.json:/run/secrets/facture_keys.json:ro,Z
+      - ./media:/app/media:Z
+      - ./staticfiles:/app/staticfiles:Z
+      - ./backups:/app/backups:Z
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import os, urllib.request; host=os.environ.get('DJANGO_ALLOWED_HOSTS','localhost').split(',')[0].strip(); request=urllib.request.Request('http://localhost:8000/sante/',headers={'Host': 'localhost' if host=='*' else host}); urllib.request.urlopen(request, timeout=5)\""]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 30s
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: python manage.py process_analysis_jobs
+    environment: *app_environment
+    volumes: *app_volumes
+    depends_on:
+      web:
+        condition: service_healthy
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    network_mode: service:web
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

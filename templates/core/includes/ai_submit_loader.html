@@ -1,0 +1,40 @@
+<script>
+  (() => {
+    document.querySelectorAll("[data-ai-submit-form]").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        const confirmMessage = form.dataset.aiConfirmMessage || "";
+        if (confirmMessage && !window.confirm(confirmMessage)) {
+          event.preventDefault();
+          return;
+        }
+
+        const button = form.querySelector("[data-ai-submit-button]");
+        const status = form.querySelector("[data-ai-submit-status]");
+        const spinner = form.querySelector("[data-ai-submit-spinner]");
+        const label = form.querySelector("[data-ai-submit-label]");
+        const loadingLabel = form.dataset.aiLoadingLabel || "Envoi...";
+        const loadingStatus = form.dataset.aiLoadingStatus || "";
+
+        if (button) {
+          button.disabled = true;
+        }
+        if (status) {
+          if (loadingStatus) {
+            status.textContent = loadingStatus;
+          }
+          status.hidden = false;
+        }
+        if (spinner) {
+          spinner.hidden = false;
+        }
+        if (label) {
+          label.textContent = loadingLabel;
+        }
+      });
+    });
+  })();
+</script>

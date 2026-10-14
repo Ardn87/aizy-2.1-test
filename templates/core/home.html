@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}AIZY{% endblock %}
+
+{% block content %}
+  <section class="home-shell mb-4">
+    <div>
+      <p class="text-uppercase text-secondary fw-semibold small mb-2">Espace documents fournisseurs</p>
+      <h1 class="h2 mb-3">AIZY</h1>
+      <p class="lead text-secondary mb-4">
+        Factures, bons de livraison et catalogues fournisseurs dans une interface de contrôle claire.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        {% if nav_can_manage_business %}
+          <a href="{% url 'dashboard' %}" class="btn btn-primary">Ouvrir le tableau de bord</a>
+          <a href="{% url 'facture_add' %}" class="btn btn-outline-primary">Ajouter une facture</a>
+          <a href="{% url 'bon_livraison_add' %}" class="btn btn-outline-secondary">Ajouter un bon de livraison</a>
+        {% elif nav_reception_only %}
+          <a href="{% url 'bon_livraison_add' %}" class="btn btn-primary">Ajouter un bon de livraison</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="document-section">
+    <div class="document-section-header">
+      <div>
+        <h2 class="h4 mb-1">Flux de travail</h2>
+        <p class="text-secondary small mb-0">Les documents restent vérifiables avant validation.</p>
+      </div>
+    </div>
+    <div class="supplier-stats">
+      <div>
+        <span>Importer</span>
+        <strong>Documents</strong>
+      </div>
+      <div>
+        <span>Analyser</span>
+        <strong>IA contrôlée</strong>
+      </div>
+      <div>
+        <span>Comparer</span>
+        <strong>Catalogue</strong>
+      </div>
+      <div>
+        <span>Valider</span>
+        <strong>Manuellement</strong>
+      </div>
+    </div>
+  </section>
+{% endblock %}

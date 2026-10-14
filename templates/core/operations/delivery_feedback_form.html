@@ -1,0 +1,29 @@
+<form class="delivery-feedback-form" method="post" action="{% url 'delivery_feedback' delivery.pk %}" data-delivery-feedback-form novalidate>
+  {% csrf_token %}
+  <div class="delivery-feedback-heading">
+    <span class="eyebrow">BON DE LIVRAISON{% if delivery.numero_bon_livraison %} · {{ delivery.numero_bon_livraison }}{% endif %}</span>
+    <h3>Quels produits présentent un défaut&nbsp;?</h3>
+    <p>Sélectionnez chaque produit concerné et ajoutez un commentaire.</p>
+  </div>
+  <fieldset class="delivery-product-list">
+    <legend class="visually-hidden">Produits du bon de livraison</legend>
+    {% for line in lines %}
+      <div class="delivery-product" data-feedback-product>
+        <label class="delivery-product-select" for="delivery-line-{{ line.pk }}">
+          <input id="delivery-line-{{ line.pk }}" type="checkbox" name="line" value="{{ line.pk }}" data-feedback-line>
+          <span class="delivery-product-check" aria-hidden="true">✓</span>
+          <span class="delivery-product-copy"><strong>{{ line.designation|default:"Produit sans nom" }}</strong><small>{% if line.reference_produit %}Réf. {{ line.reference_produit }}{% endif %}{% if line.reference_produit and line.quantite_livree is not None %} · {% endif %}{% if line.quantite_livree is not None %}{{ line.quantite_livree|floatformat:"-3" }}{% if line.unite %} {{ line.unite }}{% endif %}{% endif %}</small></span>
+        </label>
+        <div class="delivery-product-comment" data-feedback-comment hidden>
+          <label for="delivery-comment-{{ line.pk }}">Commentaire sur ce défaut</label>
+          <textarea id="delivery-comment-{{ line.pk }}" name="comment_{{ line.pk }}" rows="3" minlength="5" maxlength="2000" placeholder="Ex. produit abîmé, manquant ou différent de la commande" required disabled></textarea>
+        </div>
+      </div>
+    {% endfor %}
+  </fieldset>
+  <p class="delivery-feedback-error" data-feedback-form-error role="alert" aria-live="polite"></p>
+  <div class="delivery-feedback-actions">
+    <button class="action-button green" type="submit" name="action" value="save" data-feedback-save disabled>Enregistrer les problèmes →</button>
+    <button class="text-button" type="submit" name="action" value="none">Finalement, aucun problème</button>
+  </div>
+</form>

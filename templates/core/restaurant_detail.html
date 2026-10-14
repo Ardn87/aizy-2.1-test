@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ restaurant.nom }}{% endblock %}
+
+{% block content %}
+  <section class="supplier-detail-header mb-4">
+    <div>
+      <a href="{% url 'restaurant_list' %}" class="small text-decoration-none">Retour aux restaurants</a>
+      <h1 class="h3 mt-3 mb-1">{{ restaurant.nom }}</h1>
+      {% if restaurant.adresse %}
+        <p class="text-secondary mb-0">{{ restaurant.adresse|linebreaksbr }}</p>
+      {% else %}
+        <p class="text-secondary mb-0">Adresse non renseignée</p>
+      {% endif %}
+      {% if not restaurant.actif %}
+        <span class="badge text-bg-secondary mt-3">Inactif</span>
+      {% endif %}
+      <span class="badge text-bg-light mt-3">Devise par défaut : {{ restaurant.devise_defaut }}</span>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{% url 'restaurant_update' restaurant.pk %}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+      <a href="{% url 'fournisseur_create' %}?restaurant={{ restaurant.pk }}" class="btn btn-primary btn-sm">Ajouter un fournisseur</a>
+    </div>
+  </section>
+
+  <section class="document-section">
+    <div class="document-section-header">
+      <h2 class="h4 mb-0">Fournisseurs actifs</h2>
+      <span class="text-secondary small">{{ restaurant.fournisseurs_actifs_count }} fournisseur(s)</span>
+    </div>
+
+    {% if fournisseurs %}
+      <section class="project-list" aria-label="Fournisseurs actifs du restaurant">
+        {% for fournisseur in fournisseurs %}
+          <article class="project-row project-row--compact">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="project-row-main">
+              <span class="project-avatar">{{ fournisseur.nom|slice:":1"|upper }}</span>
+              <span class="project-copy">
+                <span class="project-name">
+                  {{ fournisseur.nom }}
+                  <span class="project-role">Fournisseur</span>
+                </span>
+                <span class="project-meta">{{ fournisseur.email|default:"Email non renseigné" }}</span>
+              </span>
+            </a>
+            <div class="project-row-stats">
+              <span class="badge text-bg-light">Devise {{ fournisseur.devise_defaut }}</span>
+              <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <p class="text-secondary mb-0">Aucun fournisseur actif pour ce restaurant.</p>
+    {% endif %}
+  </section>
+{% endblock %}

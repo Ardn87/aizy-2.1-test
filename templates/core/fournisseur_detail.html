@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% load devise %}
+
+{% block title %}{{ fournisseur.nom }}{% endblock %}
+
+{% block content %}
+<section class="workflow-panel"><div class="workflow-row"><strong>Base prix · {{ catalogue_health.label }}</strong><span>{{ catalogue_health.blocked }} facture(s) sans contrôle applicable</span><a href="{% url 'fournisseur_catalogue_import' fournisseur.pk %}">Importer un catalogue</a><a href="{% url 'supplier_units' fournisseur.pk %}">Unités et conditionnements</a></div></section>
+
+  <section class="supplier-detail-header mb-4">
+    <div>
+      <a href="{% url 'dashboard' %}" class="small text-decoration-none">Retour au tableau de bord</a>
+      <h1 class="h3 mt-3 mb-1">{{ fournisseur.nom }}</h1>
+      <p class="text-secondary mb-0">{{ fournisseur.restaurant.nom }} · Devise : {{ fournisseur.devise_defaut }}</p>
+      <p class="small text-secondary mt-2 mb-0">Contact mail : {{ fournisseur.email|default:"Non renseigné" }}</p>
+      {% if not fournisseur.actif %}
+        <span class="badge text-bg-secondary mt-3">Inactif</span>
+      {% endif %}
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{% url 'fournisseur_update' fournisseur.pk %}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+      <a href="{% url 'fournisseur_facture_add' fournisseur.pk %}" class="btn btn-primary btn-sm">Ajouter une facture</a>
+      <a href="{% url 'fournisseur_catalogue_import' fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Importer un catalogue</a>
+      <a href="{% url 'fournisseur_bon_livraison_add' fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Ajouter un bon de livraison</a>
+    </div>
+  </section>
+
+  <section id="factures" class="document-section mb-4">
+    <div class="document-section-header">
+      <h2 class="h4 mb-0">Factures</h2>
+      <span class="text-secondary small">{{ factures_count }} document(s)</span>
+    </div>
+
+    <form method="get" action="{% url 'fournisseur_detail' fournisseur.pk %}#factures" class="document-filters">
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+          <label for="facture-q" class="form-label">Numéro de facture</label>
+          <input
+            type="search"
+            id="facture-q"
+            name="facture_q"
+            value="{{ facture_filters.q }}"
+            class="form-control form-control-sm"
+          >
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="facture-statut" class="form-label">Statut</label>
+          <select id="facture-statut" name="facture_statut" class="form-select form-select-sm">
+            <option value="">Tous</option>
+            {% for value, label in facture_statut_choices %}
+              <option value="{{ value }}"{% if facture_filters.statut == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="facture-date" class="form-label">Date</label>
+          <input
+            type="date"
+            id="facture-date"
+            name="facture_date"
+            value="{{ facture_filters.date }}"
+            class="form-control form-control-sm"
+          >
+        </div>
+        <div class="col-6 col-md-auto">
+          <button type="submit" class="btn btn-primary btn-sm w-100">Filtrer</button>
+        </div>
+        {% if facture_filters_active %}
+          <div class="col-6 col-md-auto">
+            <a href="{% url 'fournisseur_detail' fournisseur.pk %}#factures" class="btn btn-outline-secondary btn-sm w-100">Effacer</a>
+          </div>
+        {% endif %}
+      </div>
+    </form>
+
+    {% if factures %}
+      <section class="project-list" aria-label="Factures du fournisseur">
+        {% for facture in factures %}
+          <article class="project-row project-row--document">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            {% if facture.statut == "analyse_en_cours" %}
+              <span class="project-row-main">
+                <span class="project-avatar project-avatar-blue">F</span>
+                <span class="project-copy">
+                  <span class="project-name">{{ facture.numero_facture|default:"Non renseigné" }} <span class="project-role">Facture</span></span>
+                  <span class="project-meta">{{ facture.date_facture|date:"d/m/Y"|default:"Non renseignée" }}</span>
+                </span>
+              </span>
+            {% else %}
+              <a href="{% url 'facture_detail' facture.pk %}" class="project-row-main">
+                <span class="project-avatar project-avatar-blue">F</span>
+                <span class="project-copy">
+                  <span class="project-name">{{ facture.numero_facture|default:"Non renseigné" }} <span class="project-role">Facture</span></span>
+                  <span class="project-meta">{{ facture.date_facture|date:"d/m/Y"|default:"Non renseignée" }}</span>
+                </span>
+              </a>
+            {% endif %}
+            <div class="project-row-stats">
+              <span class="project-stat project-stat-strong">
+                {% if facture.montant_ttc is not None %}{{ facture.montant_ttc|montant_devise:facture.devise }}{% else %}Non renseigné{% endif %}
+              </span>
+              {% if facture.statut == "analyse_en_cours" %}
+                <span class="badge text-bg-info">{{ facture.get_statut_display }}</span>
+                <span class="d-inline-flex align-items-center gap-1 text-info small">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  Analyse IA en cours...
+                </span>
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Analyse en cours</button>
+              {% else %}
+                <span class="badge text-bg-light">{{ facture.get_statut_display }}</span>
+                <a href="{% url 'facture_detail' facture.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <p class="text-secondary mb-0">
+        {% if facture_filters_active %}Aucune facture ne correspond aux filtres.{% else %}Aucune facture pour ce fournisseur.{% endif %}
+      </p>
+    {% endif %}
+  </section>
+
+  <section id="bons-livraison" class="document-section mb-4">
+    <div class="document-section-header">
+      <h2 class="h4 mb-0">Bons de livraison</h2>
+      <span class="text-secondary small">{{ bons_livraison_count }} document(s)</span>
+    </div>
+
+    <form method="get" action="{% url 'fournisseur_detail' fournisseur.pk %}#bons-livraison" class="document-filters">
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+          <label for="bon-q" class="form-label">Numéro de bon</label>
+          <input
+            type="search"
+            id="bon-q"
+            name="bon_q"
+            value="{{ bon_filters.q }}"
+            class="form-control form-control-sm"
+          >
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="bon-statut" class="form-label">Statut</label>
+          <select id="bon-statut" name="bon_statut" class="form-select form-select-sm">
+            <option value="">Tous</option>
+            {% for value, label in bon_statut_choices %}
+              <option value="{{ value }}"{% if bon_filters.statut == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="bon-date" class="form-label">Date</label>
+          <input
+            type="date"
+            id="bon-date"
+            name="bon_date"
+            value="{{ bon_filters.date }}"
+            class="form-control form-control-sm"
+          >
+        </div>
+        <div class="col-6 col-md-auto">
+          <button type="submit" class="btn btn-primary btn-sm w-100">Filtrer</button>
+        </div>
+        {% if bon_filters_active %}
+          <div class="col-6 col-md-auto">
+            <a href="{% url 'fournisseur_detail' fournisseur.pk %}#bons-livraison" class="btn btn-outline-secondary btn-sm w-100">Effacer</a>
+          </div>
+        {% endif %}
+      </div>
+    </form>
+
+    {% if bons_livraison %}
+      <section class="project-list" aria-label="Bons de livraison du fournisseur">
+        {% for bon in bons_livraison %}
+          <article class="project-row project-row--document">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            {% if bon.statut == "analyse_en_cours" %}
+              <span class="project-row-main">
+                <span class="project-avatar project-avatar-orange">B</span>
+                <span class="project-copy">
+                  <span class="project-name">{{ bon.numero_bon_livraison|default:"Non renseigné" }} <span class="project-role">Bon de livraison</span></span>
+                  <span class="project-meta">{{ bon.date_livraison|date:"d/m/Y"|default:"Non renseignée" }}</span>
+                </span>
+              </span>
+            {% else %}
+              <a href="{% url 'bon_livraison_detail' bon.pk %}" class="project-row-main">
+                <span class="project-avatar project-avatar-orange">B</span>
+                <span class="project-copy">
+                  <span class="project-name">{{ bon.numero_bon_livraison|default:"Non renseigné" }} <span class="project-role">Bon de livraison</span></span>
+                  <span class="project-meta">{{ bon.date_livraison|date:"d/m/Y"|default:"Non renseignée" }}</span>
+                </span>
+              </a>
+            {% endif %}
+            <div class="project-row-stats">
+              <span class="project-stat">
+                <span class="project-stat-strong">{{ bon.lignes_count|default:0 }}</span>
+                ligne(s){% if bon.confiance_ia %} · IA {{ bon.confiance_ia }}{% endif %}
+              </span>
+              {% if bon.note %}
+                <span class="project-stat">{{ bon.note|truncatechars:60 }}</span>
+              {% endif %}
+              {% if bon.statut == "analyse_en_cours" %}
+                <span class="badge text-bg-info">{{ bon.get_statut_display }}</span>
+                <span class="d-inline-flex align-items-center gap-1 text-info small">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  Analyse IA en cours...
+                </span>
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Analyse en cours</button>
+              {% else %}
+                <span class="badge text-bg-light">{{ bon.get_statut_display }}</span>
+                <a href="{% url 'bon_livraison_detail' bon.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <p class="text-secondary mb-0">
+        {% if bon_filters_active %}Aucun bon de livraison ne correspond aux filtres.{% else %}Aucun bon de livraison pour ce fournisseur.{% endif %}
+      </p>
+    {% endif %}
+  </section>
+
+  <section id="catalogues" class="document-section">
+    <div class="document-section-header">
+      <h2 class="h4 mb-0">Catalogues</h2>
+      <a href="{% url 'fournisseur_catalogue_import' fournisseur.pk %}" class="btn btn-outline-primary btn-sm">Importer un catalogue</a>
+    </div>
+
+    {% if catalogue_actuel %}
+      <section class="project-list mb-3" aria-label="Catalogue valide">
+        <article class="project-row project-row--document">
+          <div class="project-row-leading" aria-hidden="true">
+            <span class="project-cube-icon"></span>
+          </div>
+          <span class="project-row-main">
+            <span class="project-avatar project-avatar-orange">C</span>
+            <span class="project-copy">
+              <span class="project-name">{{ catalogue_actuel.nom|default:"Non renseigné" }} <span class="project-role">Catalogue actuel</span></span>
+              <span class="project-meta">
+                {{ catalogue_actuel.date_debut|date:"d/m/Y" }}
+                -
+                {{ catalogue_actuel.date_fin|date:"d/m/Y"|default:"Jusqu’à nouvel ordre" }}
+              </span>
+            </span>
+          </span>
+          <div class="project-row-stats">
+            <span class="badge text-bg-light">{{ catalogue_actuel.devise }}</span>
+            <span class="project-stat project-stat-strong">{{ catalogue_actuel.lignes_count }} · {{ catalogue_actuel.lignes_a_verifier_count }} à vérifier</span>
+            <a href="{% url 'catalogue_detail' catalogue_actuel.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+          </div>
+        </article>
+      </section>
+    {% else %}
+      <p class="text-secondary mb-3">Aucun catalogue valide actuellement.</p>
+    {% endif %}
+
+    {% if catalogues_recents %}
+      <div class="document-section-header mt-4">
+        <h3 class="h5 mb-0">Derniers catalogues</h3>
+        <span class="text-secondary small">{{ catalogues_count }} catalogue(s)</span>
+      </div>
+      <section class="project-list" aria-label="Derniers catalogues">
+        {% for catalogue in catalogues_recents %}
+          <article class="project-row project-row--document">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <span class="project-row-main">
+              <span class="project-avatar project-avatar-orange">C</span>
+              <span class="project-copy">
+                <span class="project-name">{{ catalogue.nom|default:"Non renseigné" }} <span class="project-role">Catalogue</span></span>
+                <span class="project-meta">
+                  {{ catalogue.date_debut|date:"d/m/Y"|default:"Non renseignée" }}
+                  -
+                  {{ catalogue.date_fin|date:"d/m/Y"|default:"Jusqu’à nouvel ordre" }}
+                </span>
+              </span>
+            </span>
+            <div class="project-row-stats">
+              {% if catalogue.statut == "analyse_en_cours" %}
+                <span class="badge text-bg-info">{{ catalogue.get_statut_display }}</span>
+                <span class="d-inline-flex align-items-center gap-1 text-info small">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  Analyse IA en cours...
+                </span>
+              {% else %}
+                <span class="badge text-bg-light">{{ catalogue.get_statut_display }}</span>
+              {% endif %}
+              <span class="project-stat project-stat-strong">{{ catalogue.lignes_count }} · {{ catalogue.lignes_a_verifier_count }} à vérifier</span>
+              {% if catalogue.statut == "analyse_en_cours" %}
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Analyse en cours</button>
+              {% else %}
+                <a href="{% url 'catalogue_detail' catalogue.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <div class="project-section-link">
+      <a href="{% url 'fournisseur_catalogue_list' fournisseur.pk %}" class="small text-decoration-none">
+        Anciens catalogues{% if catalogues_count %} · {{ catalogues_count }} catalogue(s){% endif %}
+      </a>
+    </div>
+  </section>
+
+  {% if has_pending_documents %}<span data-refresh-pending hidden></span>{% endif %}
+<nav class="workflow-pagination">{% if facture_page.has_previous %}<a href="{% querystring facture_page=facture_page.previous_page_number %}">← Factures</a>{% endif %}<span>Factures {{ facture_page.number }} / {{ facture_page.paginator.num_pages }}</span>{% if facture_page.has_next %}<a href="{% querystring facture_page=facture_page.next_page_number %}">Factures →</a>{% endif %}{% if bon_page.has_previous %}<a href="{% querystring bon_page=bon_page.previous_page_number %}">← BL</a>{% endif %}<span>BL {{ bon_page.number }} / {{ bon_page.paginator.num_pages }}</span>{% if bon_page.has_next %}<a href="{% querystring bon_page=bon_page.next_page_number %}">BL →</a>{% endif %}</nav>{% endblock %}

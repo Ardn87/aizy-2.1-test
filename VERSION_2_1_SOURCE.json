@@ -1,0 +1,13 @@
+{
+  "version": "2.1.0-test",
+  "reference_version": "2.0.0",
+  "source_directory": "/var/home/JJ/Documents/APPS/Aizy 2.0",
+  "reference_commit": "536f11cef7283fc3aad42af01e069aea87fd0ecc",
+  "reference_tag": "aizy-2.0.0",
+  "application_port": 8014,
+  "database": "aizy_v21",
+  "postgres_port": 55454,
+  "datasets_are_fictitious": true,
+  "user_accounts_preserved": true,
+  "api_keys_copied": false
+}

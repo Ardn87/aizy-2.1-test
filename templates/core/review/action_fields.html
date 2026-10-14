@@ -1,0 +1,6 @@
+{% csrf_token %}
+<input type="hidden" name="fingerprint" value="{{ current.fingerprint }}">
+<input type="hidden" name="restaurant" value="{{ scope.restaurant }}">
+<input type="hidden" name="supplier" value="{{ scope.supplier }}">
+<input type="hidden" name="state" value="{{ state }}">
+<input type="hidden" name="position" value="{{ position }}">

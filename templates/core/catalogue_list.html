@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Catalogues - {{ fournisseur.nom }}{% endblock %}
+
+{% block content %}
+  <section class="projects-dashboard">
+    <div class="projects-dashboard-header">
+      <div>
+        <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="small text-decoration-none">Retour fournisseur</a>
+        <h1 class="projects-title mt-3">Catalogues</h1>
+        <p class="projects-subtitle">{{ fournisseur.nom }} - {{ fournisseur.restaurant.nom }}</p>
+      </div>
+      <a href="{% url 'fournisseur_catalogue_import' fournisseur.pk %}" class="btn btn-primary btn-sm">Importer un catalogue</a>
+    </div>
+
+    {% if catalogues %}
+      <section class="project-list" aria-label="Liste des catalogues">
+        {% for catalogue in catalogues %}
+          <article class="project-row project-row--document">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <span class="project-row-main">
+              <span class="project-avatar project-avatar-orange">C</span>
+              <span class="project-copy">
+                <span class="project-name">
+                  {{ catalogue.nom|default:"Non renseigné" }}
+                  <span class="project-role">Catalogue</span>
+                </span>
+                <span class="project-meta">
+                  {{ catalogue.date_debut|date:"d/m/Y"|default:"Non renseignée" }}
+                  -
+                  {{ catalogue.date_fin|date:"d/m/Y"|default:"Jusqu’à nouvel ordre" }}
+                </span>
+              </span>
+            </span>
+            <div class="project-row-stats">
+              <span class="badge text-bg-light">{{ catalogue.devise }}</span>
+              {% if catalogue.statut == "analyse_en_cours" %}
+                <span class="badge text-bg-info">{{ catalogue.get_statut_display }}</span>
+                <span class="d-inline-flex align-items-center gap-1 text-info small">
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  Analyse IA en cours...
+                </span>
+              {% else %}
+                <span class="badge text-bg-light">{{ catalogue.get_statut_display }}</span>
+              {% endif %}
+              <span class="project-stat"><span class="project-stat-strong">{{ catalogue.lignes_count }} · {{ catalogue.lignes_a_verifier_count }} à vérifier</span></span>
+              {% if catalogue.statut == "analyse_en_cours" %}
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Analyse en cours</button>
+              {% else %}
+                <a href="{% url 'catalogue_detail' catalogue.pk %}" class="btn btn-outline-primary btn-sm">Voir</a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="project-empty">
+        <p class="text-secondary mb-0">Aucun catalogue pour ce fournisseur.</p>
+      </section>
+    {% endif %}
+  </section>
+
+  {% if has_pending_documents %}<span data-refresh-pending hidden></span>{% endif %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% with uncertain_fields=document.donnees_ia.champs_incertains analysis_comment=document.donnees_ia.commentaire_analyse %}
+  {% if document.confiance_ia or uncertain_fields or analysis_comment %}
+    <section class="ai-summary mb-4">
+      <h2 class="h6 mb-3">Analyse automatique</h2>
+      {% if document.confiance_ia %}
+        <p class="mb-2">
+          <span class="text-secondary">Confiance IA :</span>
+          <strong>{{ document.confiance_ia }}</strong>
+        </p>
+      {% endif %}
+      {% if uncertain_fields %}
+        <div class="mb-2">
+          <span class="text-secondary">Champs incertains :</span>
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            {% for field in uncertain_fields %}
+              <span class="badge text-bg-warning">{{ field }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      {% if analysis_comment %}
+        <p class="mb-0">
+          <span class="text-secondary">Commentaire :</span>
+          {{ analysis_comment }}
+        </p>
+      {% endif %}
+      {% if nav_can_manage_users and document.donnees_ia %}
+        <details class="ai-raw-data mt-3">
+          <summary>Voir les données IA brutes</summary>
+          <pre class="mt-2 mb-0">{{ document.donnees_ia }}</pre>
+        </details>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endwith %}

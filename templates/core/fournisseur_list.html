@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Fournisseurs{% endblock %}
+
+{% block content %}
+  <section class="projects-dashboard">
+    <div class="projects-dashboard-header">
+      <div>
+        <h1 class="projects-title">Fournisseurs</h1>
+        <p class="projects-subtitle">Vue légère des fournisseurs actifs.</p>
+      </div>
+      <div class="projects-header-actions">
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">Tableau de bord</a>
+        <a href="{% url 'fournisseur_create' %}" class="btn btn-primary btn-sm">Nouveau fournisseur</a>
+      </div>
+    </div>
+
+    {% if fournisseurs %}
+      <section class="project-list" aria-label="Liste des fournisseurs">
+        {% for fournisseur in fournisseurs %}
+          <article class="project-row">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="project-row-main">
+              <span class="project-avatar">{{ fournisseur.nom|slice:":1"|upper }}</span>
+              <span class="project-copy">
+                <span class="project-name">
+                  {{ fournisseur.restaurant.nom }} / {{ fournisseur.nom }}
+                  <span class="project-role">Fournisseur</span>
+                </span>
+                <span class="project-meta">Devise {{ fournisseur.devise_defaut }} · Restaurant actif</span>
+              </span>
+            </a>
+            <div class="project-row-stats">
+              {% if fournisseur.documents_a_valider_count %}
+                <span class="project-status project-status-warning" title="Documents à valider">{{ fournisseur.documents_a_valider_count }}</span>
+              {% elif fournisseur.litiges_count %}
+                <span class="project-status project-status-danger" title="Litiges">{{ fournisseur.litiges_count }}</span>
+              {% else %}
+                <span class="project-status project-status-neutral" title="Aucun document prioritaire">0</span>
+              {% endif %}
+              <span class="project-stat">F {{ fournisseur.factures_count }}</span>
+              <span class="project-stat">BL {{ fournisseur.bons_livraison_count }}</span>
+              <span class="project-stat">AV {{ fournisseur.documents_a_valider_count }}</span>
+              <span class="project-stat">L {{ fournisseur.litiges_count }}</span>
+              <a href="{% url 'fournisseur_detail' fournisseur.pk %}" class="project-more" aria-label="Ouvrir {{ fournisseur.nom }}">⋮</a>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="project-empty">
+        <h2 class="h5 mb-2">Aucun fournisseur</h2>
+        <p class="text-secondary mb-0">Les fournisseurs actifs apparaîtront ici.</p>
+      </section>
+    {% endif %}
+  </section>
+{% endblock %}

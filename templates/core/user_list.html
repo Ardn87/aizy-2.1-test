@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block content %}
+  <section class="projects-dashboard">
+    <div class="projects-dashboard-header">
+      <div>
+        <a href="{% url 'dashboard' %}" class="small text-decoration-none">Retour au tableau de bord</a>
+        <h1 class="projects-title mt-3">Utilisateurs</h1>
+        <p class="projects-subtitle">Gestion simple des comptes applicatifs.</p>
+      </div>
+      <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm">Nouvel utilisateur</a>
+    </div>
+
+    {% if users %}
+      <section class="project-list" aria-label="Liste des utilisateurs">
+        {% for managed_user in users %}
+          <article class="project-row project-row--compact">
+            <div class="project-row-leading" aria-hidden="true">
+              <span class="project-cube-icon"></span>
+            </div>
+            <span class="project-row-main">
+              <span class="project-avatar project-avatar-neutral">{{ managed_user.username|slice:":1"|upper }}</span>
+              <span class="project-copy">
+                <span class="project-name">
+                  {{ managed_user.username }}
+                  <span class="project-role">Compte</span>
+                </span>
+                <span class="project-meta">{{ managed_user.email|default:"Email non renseigné" }}</span>
+              </span>
+            </span>
+            <div class="project-row-stats">
+              <span class="badge text-bg-light">{{ managed_user.app_role }}</span>
+              {% if managed_user.is_active %}
+                <span class="badge text-bg-success">Actif</span>
+              {% else %}
+                <span class="badge text-bg-secondary">Inactif</span>
+              {% endif %}
+              <div class="project-row-actions">
+                <a href="{% url 'user_update' managed_user.pk %}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                <a href="{% url 'user_password_update' managed_user.pk %}" class="btn btn-outline-secondary btn-sm">Mot de passe</a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="project-empty">
+        <h2 class="h5 mb-2">Aucun utilisateur</h2>
+        <p class="text-secondary mb-0">Les utilisateurs apparaîtront ici.</p>
+      </section>
+    {% endif %}
+  </section>
+{% endblock %}

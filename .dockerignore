@@ -1,0 +1,14 @@
+.git
+.env
+keys.json
+*.keys.json
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+db.sqlite3
+media/*
+!media/.gitkeep
+staticfiles/*
+!staticfiles/.gitkeep
+backups/

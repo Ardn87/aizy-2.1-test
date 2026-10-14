@@ -1,0 +1,1 @@
+<label>Produit facturé<select class="form-select" name="invoice_line" required><option value="">Choisir un produit…</option>{% for row in state.rows %}<option value="{{ row.line.pk }}">{{ row.line }} · {{ row.line.quantite|default_if_none:'?' }} {{ row.line.unite }}</option>{% endfor %}</select></label>

@@ -1,0 +1,6 @@
+[Unit]
+Description=Sauvegarde Aizy et verification des references
+[Service]
+Type=oneshot
+WorkingDirectory=/chemin/vers/aizy
+ExecStart=/chemin/vers/aizy/scripts/scheduled-backup.sh

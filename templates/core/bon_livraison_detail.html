@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load devise %}
+
+{% block title %}Bon de livraison {{ bon_livraison.numero_bon_livraison|default:bon_livraison.pk }}{% endblock %}
+
+{% block content %}
+  <section class="document-detail-header mb-4">
+    <div>
+      <a href="{% url 'fournisseur_detail' bon_livraison.fournisseur.pk %}" class="small text-decoration-none">Retour fournisseur</a>
+      <h1 class="h3 mt-3 mb-1">Bon de livraison {{ bon_livraison.numero_bon_livraison|default:"sans numéro" }}</h1>
+      <p class="text-secondary mb-0">{{ bon_livraison.fournisseur.nom }} - {{ bon_livraison.fournisseur.restaurant.nom }}</p>
+    </div>
+    {% if nav_can_manage_business %}
+      <div class="document-header-actions">
+        <span class="badge {{ status_badge_class }}">Statut : {{ bon_livraison.get_statut_display }}</span>
+        <form
+          method="post"
+          action="{% url 'bon_livraison_ai_reanalyze' bon_livraison.pk %}"
+          class="m-0 d-inline-flex align-items-center gap-2 flex-wrap"
+          data-ai-submit-form
+          data-ai-loading-label="Analyse..."
+          data-ai-loading-status="Relance IA en cours..."
+          data-ai-confirm-message="Relancer l’analyse IA de ce document ?"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-secondary btn-sm" data-ai-submit-button>
+            <span class="spinner-border spinner-border-sm me-1" aria-hidden="true" hidden data-ai-submit-spinner></span>
+            <span data-ai-submit-label>Relancer l’analyse IA</span>
+          </button>
+          <span class="text-info small" hidden data-ai-submit-status>Relance IA en cours...</span>
+        </form>
+        {% if nav_can_manage_users %}
+          <a href="{% url 'bon_livraison_delete' bon_livraison.pk %}" class="btn btn-outline-danger btn-sm">Archiver le bon de livraison</a>
+        {% endif %}
+      </div>
+    {% else %}
+      <span class="badge {{ status_badge_class }}">Statut : {{ bon_livraison.get_statut_display }}</span>
+    {% endif %}
+  </section>
+
+  {% include "core/includes/document_workflow.html" %}
+  <div class="document-detail-layout">
+    {% include "core/includes/document_preview.html" %}
+
+    <section class="form-shell">
+      {% include "core/includes/document_ai_summary.html" with document=bon_livraison %}
+
+      {% if not openai_status.configured %}
+        <div class="alert alert-warning" role="alert">
+          OpenAI n’est pas configuré. Le fichier est conservé ; vous pourrez relancer l’analyse IA après configuration.
+        </div>
+      {% endif %}
+
+      {% if bon_livraison.statut == "analyse_echouee" %}
+        <div class="alert alert-warning" role="alert">
+          L’analyse automatique n’a pas abouti. Le document est conservé et peut être complété manuellement ou relancé.
+        </div>
+      {% endif %}
+
+      {% if nav_can_manage_users and bon_livraison.erreur_analyse %}
+        <details class="ai-raw-data mb-4">
+          <summary>Détail technique de la dernière erreur</summary>
+          <pre class="mt-2 mb-0">{{ bon_livraison.erreur_analyse }}</pre>
+        </details>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+          {% for field in form %}
+            <div class="{% if field.name == 'note' %}form-grid-full{% endif %}">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if nav_can_manage_business %}
+          <div class="quick-status-actions mt-4">
+            <span class="text-secondary small">Actions statut</span>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <button type="submit" name="quick_status" value="a_verifier" class="btn btn-outline-warning btn-sm">Corriger plus tard</button>
+              <button type="submit" name="quick_status" value="valide" class="btn btn-outline-success btn-sm">Valider l’import</button>
+              <button type="submit" name="quick_status" value="litige" class="btn btn-outline-danger btn-sm">Mettre en litige</button>
+            </div>
+          </div>
+        {% endif %}
+        <div class="mt-4 d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+          <a href="{% url 'fournisseur_detail' bon_livraison.fournisseur.pk %}" class="btn btn-outline-secondary">Annuler</a>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <section id="produits-detectes" class="document-section mt-4">
+    <div class="document-section-header">
+      <div>
+        <h2 class="h4 mb-1">Produits détectés</h2>
+        <p class="text-secondary small mb-0">Lignes extraites automatiquement du bon de livraison.</p>
+      </div>
+      {% if nav_can_manage_business %}
+        <a href="{% url 'bon_livraison_lignes_update' bon_livraison.pk %}" class="btn btn-outline-secondary btn-sm">Corriger les lignes</a>
+      {% endif %}
+    </div>
+
+    {% if lignes_bon_livraison %}
+      <div class="invoice-lines-table-wrap">
+        <table class="table table-sm align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Référence / Produit</th>
+              <th scope="col" class="text-end">Quantité livrée</th>
+              <th scope="col">Conditionnement</th>
+              <th scope="col" class="text-end">Prix unitaire</th>
+              <th scope="col" class="text-end">Total ligne</th>
+              <th scope="col">Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ligne in lignes_bon_livraison %}
+              <tr>
+                <td>
+                  {% if ligne.reference_produit %}
+                    <strong class="d-block">{{ ligne.reference_produit }}</strong>
+                  {% endif %}
+                  <span class="{% if not ligne.designation %}text-secondary{% endif %}">
+                    {{ ligne.designation|default:"—" }}
+                  </span>
+                  {% if ligne.texte_brut %}
+                    <span class="d-block text-secondary small">{{ ligne.texte_brut|truncatechars:90 }}</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if ligne.quantite_livree is not None %}
+                    {{ ligne.quantite_livree|floatformat:-3 }}{% if ligne.unite %} {{ ligne.unite }}{% endif %}
+                  {% else %}
+                    —
+                  {% endif %}
+                  {% if ligne.quantite_originale and ligne.quantite_livree is None %}
+                    <span class="d-block text-secondary small">Lu : {{ ligne.quantite_originale }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ ligne.conditionnement|default:"—" }}</td>
+                <td class="text-end">
+                  {% if ligne.prix_unitaire is not None %}
+                    {{ ligne.prix_unitaire|montant_devise:bon_livraison.fournisseur.devise_defaut }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if ligne.total_ligne is not None %}
+                    {{ ligne.total_ligne|montant_devise:bon_livraison.fournisseur.devise_defaut }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge {% if ligne.statut_ligne == 'ok' %}text-bg-success{% elif ligne.statut_ligne == 'ignoree' %}text-bg-secondary{% else %}text-bg-warning{% endif %}">
+                    {{ ligne.get_statut_ligne_display }}
+                  </span>
+                  {% if ligne.confiance_ia %}
+                    <span class="d-block text-secondary small">IA {{ ligne.confiance_ia }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="4">Total détecté</th>
+              <td class="text-end">
+                {% if lignes_total_livraison is not None %}
+                  {{ lignes_total_livraison|montant_devise:bon_livraison.fournisseur.devise_defaut }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-warning mb-0" role="alert">
+        Aucune ligne produit n’a été détectée. Vous pouvez en ajouter une manuellement ou relancer l’analyse IA.
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}
